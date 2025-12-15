@@ -1,0 +1,40 @@
+---
+import MainLayout from '../layouts/main.astro';
+import { SimpleTest } from '../components/SimpleTest';
+---
+
+<MainLayout>
+  <div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h1>React Test Page</h1>
+    <p>This page tests if React components can load at all.</p>
+    
+    <div id="test-component" style="margin: 2rem 0; padding: 1rem; border: 2px solid red;">
+      <p>If you see this red box, React has NOT loaded.</p>
+      <SimpleTest client:only="react" />
+    </div>
+    
+    <div style="margin-top: 2rem;">
+      <h3>Debug Info:</h3>
+      <pre id="debug-info" style="background: #f5f5f5; padding: 1rem; border-radius: 4px;"></pre>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  console.log('[Test Page] Loaded');
+  console.log('[Test Page] Base URL:', import.meta.env.BASE_URL);
+  console.log('[Test Page] Mode:', import.meta.env.MODE);
+  
+  const debugInfo = document.getElementById('debug-info');
+  if (debugInfo) {
+    debugInfo.textContent = `
+Location: ${window.location.href}
+Pathname: ${window.location.pathname}
+Scripts on page: ${document.querySelectorAll('script').length}
+    `.trim();
+  }
+  
+  // List all script tags
+  console.log('[Test Page] Script tags:', Array.from(document.querySelectorAll('script')).map(s => s.src || s.textContent?.substring(0, 50)));
+</script>
+</MainLayout>

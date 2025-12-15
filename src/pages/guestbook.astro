@@ -1,0 +1,265 @@
+---
+/**
+ * Guestbook Demo Page
+ * 
+ * Demonstrates the guestbook form integration with Webflow CMS.
+ * Shows both the button and a list of recent entries.
+ */
+
+import MainLayout from '../layouts/main.astro';
+import { GuestbookButton } from '../components/GuestbookButton';
+import { GuestbookCount } from '../components/GuestbookCount';
+
+const pageClass = 'guestbook-demo';
+
+// Get collection ID from environment
+const collectionId = import.meta.env.PUBLIC_GUESTBOOK_COLLECTION_ID || '69383a09bbf502930bf620a3';
+---
+
+<MainLayout pageClass={pageClass}>
+  <div class="min-h-screen bg-background text-foreground">
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+      {/* Page Header */}
+      <header class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-4 font-heading">
+          Guestbook Demo
+        </h1>
+        <p class="text-lg text-muted-foreground font-body">
+          Test the guestbook form integration with Webflow CMS
+        </p>
+        
+        {/* Guestbook Count Component - now fetches dynamically */}
+        <div class="mt-6" id="count-container">
+          <div class="bg-card border border-border rounded-lg p-4">
+            <p class="text-sm text-muted-foreground mb-2">Loading count...</p>
+            <GuestbookCount 
+              client:only="react"
+              initialCount={0}
+              autoRefresh={true}
+              refreshInterval={5000}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main class="space-y-8">
+        {/* Button Section */}
+        <section class="bg-card rounded-lg border border-border p-8 text-center">
+          <h2 class="text-2xl font-semibold mb-4 font-heading">
+            Sign the Guestbook
+          </h2>
+          <p class="text-muted-foreground mb-6 font-body">
+            Click the button below to open the guestbook form
+          </p>
+          
+          {/* Guestbook Button */}
+          <div class="flex justify-center">
+            <GuestbookButton 
+              client:only="react"
+              buttonText="Sign the Guestbook"
+              collectionId={collectionId}
+            />
+          </div>
+        </section>
+
+        {/* Information Section */}
+        <section class="bg-card rounded-lg border border-border p-8">
+          <h2 class="text-2xl font-semibold mb-4 font-heading">
+            How It Works
+          </h2>
+          
+          <div class="space-y-4 text-muted-foreground font-body">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                1
+              </div>
+              <div>
+                <h3 class="font-semibold text-foreground mb-1">Click the Button</h3>
+                <p class="text-sm">Opens a modal with the Webflow-generated guestbook form</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                2
+              </div>
+              <div>
+                <h3 class="font-semibold text-foreground mb-1">Fill Out the Form</h3>
+                <p class="text-sm">Enter your name, email, and optional fields like location and message</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                3
+              </div>
+              <div>
+                <h3 class="font-semibold text-foreground mb-1">Submit to CMS</h3>
+                <p class="text-sm">Data is validated and sent to Webflow CMS via secure API route</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                4
+              </div>
+              <div>
+                <h3 class="font-semibold text-foreground mb-1">Count Updates Automatically</h3>
+                <p class="text-sm">The count refreshes every 5 seconds to show the latest total</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Field Mapping Section */}
+        <section class="bg-card rounded-lg border border-border p-8">
+          <h2 class="text-2xl font-semibold mb-4 font-heading">
+            Field Mapping
+          </h2>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="border-b border-border">
+                <tr class="text-left">
+                  <th class="py-2 px-3 font-semibold">Form Field</th>
+                  <th class="py-2 px-3 font-semibold">CMS Field</th>
+                  <th class="py-2 px-3 font-semibold">Required</th>
+                </tr>
+              </thead>
+              <tbody class="font-body text-muted-foreground">
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">full_name</td>
+                  <td class="py-2 px-3">name, first-name</td>
+                  <td class="py-2 px-3">✅ Yes</td>
+                </tr>
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">email</td>
+                  <td class="py-2 px-3">email</td>
+                  <td class="py-2 px-3">✅ Yes</td>
+                </tr>
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">(auto)</td>
+                  <td class="py-2 px-3">slug</td>
+                  <td class="py-2 px-3">✅ Auto-generated</td>
+                </tr>
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">(auto)</td>
+                  <td class="py-2 px-3">edit-code</td>
+                  <td class="py-2 px-3">✅ Auto-generated</td>
+                </tr>
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">guestbook_location</td>
+                  <td class="py-2 px-3">location</td>
+                  <td class="py-2 px-3">Optional</td>
+                </tr>
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">guestbook_first_meeting</td>
+                  <td class="py-2 px-3">guestbook-first-meeting</td>
+                  <td class="py-2 px-3">Optional</td>
+                </tr>
+                <tr class="border-b border-border">
+                  <td class="py-2 px-3">guestbook_relationship</td>
+                  <td class="py-2 px-3">relationship</td>
+                  <td class="py-2 px-3">Optional</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3">guestbook_message</td>
+                  <td class="py-2 px-3">guestbook-message</td>
+                  <td class="py-2 px-3">Optional</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Technical Details */}
+        <section class="bg-card rounded-lg border border-border p-8">
+          <h2 class="text-2xl font-semibold mb-4 font-heading">
+            Technical Details
+          </h2>
+          
+          <ul class="space-y-2 text-muted-foreground font-body">
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>Uses Webflow-generated components (GuestbookForm, GuestbookFormButton)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>Server-side API routes keep tokens secure</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>Client-side validation before submission</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>TypeScript for type safety</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>Supports both create and update operations</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>Real-time count updates every 5 seconds</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span>Can be embedded on external pages</span>
+            </li>
+          </ul>
+        </section>
+
+        {/* Configuration */}
+        <section class="bg-card rounded-lg border border-border p-8">
+          <h2 class="text-2xl font-semibold mb-4 font-heading">
+            Configuration
+          </h2>
+          
+          <div class="space-y-3 font-body">
+            <div class="bg-muted/50 rounded p-3">
+              <p class="text-xs text-muted-foreground mb-1">Collection ID</p>
+              <code class="text-sm font-mono">{collectionId}</code>
+            </div>
+            
+            <div class="bg-muted/50 rounded p-3">
+              <p class="text-xs text-muted-foreground mb-1">Required Environment Variables</p>
+              <ul class="text-sm space-y-1 mt-2">
+                <li><code class="font-mono">WEBFLOW_CMS_SITE_API_TOKEN_WRITE</code></li>
+                <li><code class="font-mono">PUBLIC_GUESTBOOK_COLLECTION_ID</code> (optional)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer class="mt-12 text-center text-sm text-muted-foreground font-body">
+        <p>Built with Webflow Cloud, React, and TypeScript</p>
+      </footer>
+    </div>
+  </div>
+</MainLayout>
+
+<!-- Load Finsweet Select Custom library -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-selectcustom@1/selectcustom.js"></script>
+
+<!-- Debug script to check if React is loading -->
+<script>
+  console.log('[Guestbook Page] Page loaded');
+  console.log('[Guestbook Page] Count container:', document.getElementById('count-container'));
+  
+  // Check after a delay if React has hydrated
+  setTimeout(() => {
+    const container = document.getElementById('count-container');
+    console.log('[Guestbook Page] After 2s, count container HTML:', container?.innerHTML);
+  }, 2000);
+</script>
+
+<style>
+  /* Ensure proper layout */
+  .guestbook-demo main {
+    display: block !important;
+  }
+</style>

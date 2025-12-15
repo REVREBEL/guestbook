@@ -1,0 +1,65 @@
+import * as React from "react";
+import * as Types from "./types";
+
+declare function GuestbookForm(
+    props: {
+        as?: React.ElementType;
+        fullNameFormInputId?: Types.Basic.IdTextInput;
+        fullNameFormInputVisibility?: Types.Visibility.VisibilityConditions;
+        fullNameFormIconVisibility?: Types.Visibility.VisibilityConditions;
+        fullNameFormInputLabel?: React.ReactNode;
+        locationFieldFormInputId?: Types.Basic.IdTextInput;
+        locationFieldFormInputVisibility?: Types.Visibility.VisibilityConditions;
+        locationFieldFormIconVisibility?: Types.Visibility.VisibilityConditions;
+        locationFieldFormInputLabel?: React.ReactNode;
+        locationFieldFormInputRuntimeProps?: Types.Devlink.RuntimeProps;
+        firstMetFieldFormFieldId?: Types.Basic.IdTextInput;
+        firstMetFieldFormFieldVisibility?: Types.Visibility.VisibilityConditions;
+        firstMetFieldFormIconVisibility?: Types.Visibility.VisibilityConditions;
+        firstMetFieldFormFieldLabel?: React.ReactNode;
+        firstMetFieldFormInputRuntimeProps?: Types.Devlink.RuntimeProps;
+        relationshipFieldFormInputId?: Types.Basic.IdTextInput;
+        relationshipFieldFormFieldVisibility?: Types.Visibility.VisibilityConditions;
+        relationshipFieldFormFieldLabel?: React.ReactNode;
+        relationshipFieldPlaceholderText?: React.ReactNode;
+        relationshipFieldInputFieldLink?: Types.Basic.Link;
+        relationshipFieldInputFieldRuntimeProps?: Types.Devlink.RuntimeProps;
+        relationshipFieldInputFieldSlot?: Types.Devlink.Slot;
+        relationshipFieldRuntimePropsList?: Types.Devlink.RuntimeProps;
+        relationshipFieldRuntimePropsListLink?: Types.Devlink.RuntimeProps;
+        relationshipFieldSelectInputDropdownRuntimeProps?: Types.Devlink.RuntimeProps;
+        messageFieldFormInputId?: Types.Basic.IdTextInput;
+        messageFieldFormFieldVisibility?: Types.Visibility.VisibilityConditions;
+        messageFieldFormFieldLabel?: React.ReactNode;
+        messageFieldInputFieldRuntimeProps?: Types.Devlink.RuntimeProps;
+        messageFieldCharactersVisibility?: Types.Visibility.VisibilityConditions;
+        messageFieldCharacterLabel?: React.ReactNode;
+        messageFieldCharactersRuntimeProps?: Types.Devlink.RuntimeProps;
+        messageFieldCharactersSlot?: Types.Devlink.Slot;
+        emailFieldFormInputId?: Types.Basic.IdTextInput;
+        emailFieldFormFieldVisibility?: Types.Visibility.VisibilityConditions;
+        emailFieldFormFieldLabel?: React.ReactNode;
+        emailFieldBottomDisclaimerLabel?: React.ReactNode;
+        emailFieldDisclaimerVisibility?: Types.Visibility.VisibilityConditions;
+        emailFieldFormIconVisibility?: Types.Visibility.VisibilityConditions;
+        emailFieldFormInputRuntimeProps?: Types.Devlink.RuntimeProps;
+        buttonVisibility?: Types.Visibility.VisibilityConditions;
+        buttonId?: Types.Basic.IdTextInput;
+        buttonButtonIconVisibility?: Types.Visibility.VisibilityConditions;
+        buttonLabelText?: Types.Builtin.Text;
+        buttonLoadingMessage?: Types.Builtin.Text;
+        buttonRuntimeProps?: Types.Devlink.RuntimeProps;
+        buttonSlot?: Types.Devlink.Slot;
+        userMessagesSuccessMessageText?: React.ReactNode;
+        userMessagesErrorMessageText?: React.ReactNode;
+        componentId?: Types.Basic.IdTextInput;
+        componentVisibility?: Types.Visibility.VisibilityConditions;
+        formComponentRuntimeProps?: Types.Devlink.RuntimeProps;
+        buttonSubmitButtonVisibility?: Types.Visibility.VisibilityConditions;
+        buttonSubmitButtonId?: Types.Basic.IdTextInput;
+        guestbookCollectionIdCollectionIdVariable?: Types.Builtin.Text;
+        guestbookCollectionIdFormInputId?: Types.Basic.IdTextInput;
+        relationshipFieldRuntimeProps?: Types.Devlink.RuntimeProps;
+        relationshipFieldSelectDropdownSlot?: Types.Devlink.Slot;
+    }
+): React.JSX.Element

@@ -1,0 +1,66 @@
+import * as React from "react";
+import * as Types from "./types";
+
+declare function MemoryJournalCardSlots(
+    props: {
+        as?: React.ElementType;
+        card1CardVisibility?: Types.Visibility.VisibilityConditions;
+        card1CardSlotId?: Types.Basic.IdTextInput;
+        card1CardSlot?: Types.Devlink.Slot;
+        card1CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card2CardVisibility?: Types.Visibility.VisibilityConditions;
+        card2CardId?: Types.Basic.IdTextInput;
+        card2CardSlot?: Types.Devlink.Slot;
+        card2CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card3WIdeCardSlotVisibility?: Types.Visibility.VisibilityConditions;
+        card3WIdeCardSlotId?: Types.Basic.IdTextInput;
+        card3WIdeCardSlot?: Types.Devlink.Slot;
+        card3WIdeCardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card4CardVisibility?: Types.Visibility.VisibilityConditions;
+        card4CardId?: Types.Basic.IdTextInput;
+        card4CardSlot?: Types.Devlink.Slot;
+        card4CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card5CardVisibility?: Types.Visibility.VisibilityConditions;
+        card5CardId?: Types.Basic.IdTextInput;
+        card5CardSlot?: Types.Devlink.Slot;
+        card5CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card6TallCardTallVisibility?: Types.Visibility.VisibilityConditions;
+        card6TallCardTallId?: Types.Basic.IdTextInput;
+        card6TallCardTallSlot?: Types.Devlink.Slot;
+        card6TallCardTallRuntimeProps?: Types.Devlink.RuntimeProps;
+        card7CardVisibility?: Types.Visibility.VisibilityConditions;
+        card7CardId?: Types.Basic.IdTextInput;
+        card7CardSlot?: Types.Devlink.Slot;
+        card7CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card8WIdeCardWIdeVisibility?: Types.Visibility.VisibilityConditions;
+        card8WIdeCardWIdeId?: Types.Basic.IdTextInput;
+        card8WIdeCardWIdeSlot?: Types.Devlink.Slot;
+        card8WIdeCardWIdeRuntimeProps?: Types.Devlink.RuntimeProps;
+        card9CardSlot?: Types.Devlink.Slot;
+        card9CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card9CardVisibility?: Types.Visibility.VisibilityConditions;
+        card9CardId?: Types.Basic.IdTextInput;
+        card10CardVisibility?: Types.Visibility.VisibilityConditions;
+        card10CardId?: Types.Basic.IdTextInput;
+        card10CardSlot?: Types.Devlink.Slot;
+        card10CardRuntimeProps?: Types.Devlink.RuntimeProps;
+        card11TallCardTallVisibility?: Types.Visibility.VisibilityConditions;
+        card11TallCardTallId?: Types.Basic.IdTextInput;
+        card11TallCardTallSlot?: Types.Devlink.Slot;
+        card11TallCardTallRuntimeProps?: Types.Devlink.RuntimeProps;
+        memoryJournalMainParagraph?: React.ReactNode;
+        memoryJournalMainParagraphVisibility?: Types.Visibility.VisibilityConditions;
+        memoryJournalMainHeadlineTag?: Types.Basic.HeadingTag;
+        memoryJournalMemoryJournalMainHeadlineText?: React.ReactNode;
+        memoryJournalSubHeadlineTag?: Types.Basic.HeadingTag;
+        memoryJournalSubHeadlineText?: React.ReactNode;
+        formButtonButtonRuntimeProps?: Types.Devlink.RuntimeProps;
+        formButtonButtonSlot?: Types.Devlink.Slot;
+        formButtonButtonVisibility?: Types.Visibility.VisibilityConditions;
+        formButtonButtonId?: Types.Basic.IdTextInput;
+        fIlterSlotsFIlterSlotsVisibility?: Types.Visibility.VisibilityConditions;
+        fIlterSlotsFIlterSlotsId?: Types.Basic.IdTextInput;
+        fIlterSlotsFIlterSlotsRuntimeProps?: Types.Devlink.RuntimeProps;
+        fIlterSlotsFIlterSlot?: Types.Devlink.Slot;
+    }
+): React.JSX.Element
