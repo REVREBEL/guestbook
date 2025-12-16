@@ -12,11 +12,14 @@
     "setup:repo": "bash scripts/setup-repo.sh",
     "build:push": "bash scripts/build-and-push.sh",
     "build:docs": "node ./scripts/build-master-doc.mjs",
-    "cleanup": "rm -rf /tmp/* /var/tmp/* /root/.npm /root/.cache /root/.local /app/lost+found/* /app/dist 2>/dev/null || true && echo 'Cleanup complete!' && df -h / | tail -1"
+    "cleanup": "rm -rf /tmp/* /var/tmp/* /root/.npm /root/.cache /root/.local /app/lost+found/* /app/dist 2>/dev/null || true && echo 'Cleanup complete!' && df -h / | tail -1",
+    "build:timeline-embed": "node scripts/build-timeline-embed.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "12.6.7",
     "@astrojs/react": "4.3.0",
+    "@aws-sdk/client-s3": "3.948.0",
+    "@aws-sdk/s3-request-presigner": "3.948.0",
     "@hookform/resolvers": "5.2.1",
     "@radix-ui/react-accordion": "1.2.11",
     "@radix-ui/react-alert-dialog": "1.1.14",
@@ -48,6 +51,7 @@
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
     "astro": "5.13.5",
+    "browser-image-compression": "2.0.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",

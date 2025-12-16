@@ -1,0 +1,138 @@
+---
+import MainLayout from '../layouts/main.astro';
+import { baseUrl } from '../lib/base-url';
+---
+
+<MainLayout pageClass="timeline-embed-test">
+  <div style="min-height: 100vh; background-color: var(--background); padding: 2rem;">
+    <div style="max-width: 800px; margin: 0 auto;">
+      
+      <header style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--foreground);">
+          Timeline Form Embed Test
+        </h1>
+        <p style="color: var(--muted-foreground); font-size: 1.125rem;">
+          Testing image uploads on a static HTML form (mimics Webflow)
+        </p>
+      </header>
+
+      <!-- Simulated Webflow Form -->
+      <div style="background-color: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 2rem;">
+        <form action={`${baseUrl}/api/timeline/submit`} method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- Name Field -->
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--foreground);">
+              Your Name *
+            </label>
+            <input 
+              type="text" 
+              name="name" 
+              required
+              style="width: 100%; padding: 0.75rem; border: 0px solid var(--input); border-radius: 4px; background-color: var(--background); color: var(--foreground);"
+            />
+          </div>
+
+          <!-- Location Field -->
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--foreground);">
+              Location
+            </label>
+            <input 
+              type="text" 
+              name="location"
+              style="width: 100%; padding: 0.75rem; border: 1px solid var(--input); border-radius: 4px; background-color: var(--background); color: var(--foreground);"
+            />
+          </div>
+
+          <!-- Memory Field -->
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--foreground);">
+              Share Your Memory *
+            </label>
+            <textarea 
+              name="memory" 
+              required
+              rows="4"
+              style="width: 100%; padding: 0.75rem; border: 1px solid var(--input); border-radius: 4px; background-color: var(--background); color: var(--foreground); resize: vertical;"
+            ></textarea>
+          </div>
+
+          <!-- Month/Year Field -->
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--foreground);">
+              Month & Year
+            </label>
+            <input 
+              type="text" 
+              name="month-year"
+              placeholder="e.g., June 2023"
+              style="width: 100%; padding: 0.75rem; border: 1px solid var(--input); border-radius: 4px; background-color: var(--background); color: var(--foreground);"
+            />
+          </div>
+
+          <!-- Photo 1 Upload -->
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--foreground);">
+              Photo 1
+            </label>
+            <div 
+              data-timeline-image-upload="photo1" 
+              data-upload-label="Upload First Photo"
+              data-max-size-mb="10"
+            ></div>
+          </div>
+
+          <!-- Photo 2 Upload -->
+          <div>
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--foreground);">
+              Photo 2
+            </label>
+            <div 
+              data-timeline-image-upload="photo2" 
+              data-upload-label="Upload Second Photo"
+              data-max-size-mb="10"
+            ></div>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            type="submit"
+            style="padding: 1rem 2rem; background-color: var(--primary); color: var(--primary-foreground); border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 1rem;"
+          >
+            Submit Memory
+          </button>
+
+        </form>
+      </div>
+
+      <!-- Debug Info -->
+      <div style="margin-top: 2rem; padding: 1rem; background-color: var(--muted); border-radius: 4px;">
+        <h3 style="margin-bottom: 0.5rem; font-weight: 600;">Debug Info:</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: var(--muted-foreground);">
+          <li>Form Action: <code>{baseUrl}/api/timeline/submit</code></li>
+          <li>Embed Script: <code>{baseUrl}/timeline-form-embed.js</code></li>
+          <li>Upload IDs: photo1, photo2</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 1rem; text-align: center;">
+        <a href={baseUrl} style="color: var(--primary); text-decoration: none;">← Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+</MainLayout>
+
+<!-- Include the embed script -->
+<script is:inline define:vars={{ baseUrl }}>
+  // Set base URL for the embed
+  window.__WEBFLOW_APP_BASE_URL__ = baseUrl;
+</script>
+<script src={`${baseUrl}/timeline-form-embed.js`}></script>
+
+<style>
+  .timeline-embed-test main {
+    display: block !important;
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+import MainLayout from '../layouts/main.astro';
+import { TimelineFormWithUploads } from '../components/TimelineFormWithUploads';
+
+const pageClass = 'timeline-test';
+---
+
+<MainLayout pageClass={pageClass}>
+  <div style="min-height: 100vh; background: var(--background); padding: 2rem;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h1 style="font-family: var(--heading-font); font-size: 2rem; margin-bottom: 1rem; color: var(--foreground);">
+        Timeline Form Test
+      </h1>
+      <p style="font-family: var(--body-font); color: var(--muted-foreground); margin-bottom: 2rem;">
+        Test the timeline form with automatic image compression and R2 upload.
+      </p>
+      
+      {/* Render the Timeline Form with Image Uploads */}
+      <TimelineFormWithUploads client:only="react" />
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .timeline-test main {
+    display: block !important;
+  }
+</style>

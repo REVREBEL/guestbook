@@ -15,7 +15,7 @@ import {
   transformToCreatePayload, 
   transformToUpdatePayload 
 } from './utils';
-import { baseUrl } from '../base-url';
+import { getClientBaseUrl } from '../base-url';
 
 /**
  * Submit guestbook form data to create or update a CMS item
@@ -55,6 +55,7 @@ export async function submitGuestbookForm(
 async function createGuestbookItem(
   values: GuestbookFormValues
 ): Promise<CmsItemResponse> {
+  const baseUrl = getClientBaseUrl();
   const payload = transformToCreatePayload(values);
   
   // Use base URL for API route
@@ -100,6 +101,7 @@ async function updateGuestbookItem(
     throw new Error('Item ID is required for updates');
   }
 
+  const baseUrl = getClientBaseUrl();
   const payload = transformToUpdatePayload(values);
   
   // Use base URL for API route
@@ -144,6 +146,8 @@ export async function getGuestbookItem(
   collectionId: string,
   itemId: string
 ): Promise<CmsItemResponse> {
+  const baseUrl = getClientBaseUrl();
+  
   // Use base URL for API route
   const url = `${baseUrl}/api/cms/${collectionId}/${itemId}`;
   
@@ -182,6 +186,7 @@ export async function listGuestbookItems(
   collectionId: string,
   options?: { limit?: number; offset?: number }
 ): Promise<{ items: CmsItemResponse[]; pagination: any }> {
+  const baseUrl = getClientBaseUrl();
   const { limit = 20, offset = 0 } = options || {};
   
   // Use base URL for API route
