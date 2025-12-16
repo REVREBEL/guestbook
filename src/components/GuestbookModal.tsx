@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { GuestbookForm } from '../site-components/GuestbookForm';
-import { baseUrl } from '../lib/base-url';
+import { getClientBaseUrl } from '../lib/base-url';
 
 interface GuestbookModalProps {
   /** Whether the modal is open */
@@ -36,6 +36,12 @@ export function GuestbookModal({
   onError
 }: GuestbookModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [baseUrl, setBaseUrl] = useState('');
+
+  // Get base URL on mount (client-side only)
+  useEffect(() => {
+    setBaseUrl(getClientBaseUrl());
+  }, []);
 
   // Handle escape key
   useEffect(() => {

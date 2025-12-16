@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { GuestbookCount as WebflowGuestbookCount } from '../site-components/GuestbookCount';
-import { baseUrl } from '../lib/base-url';
+import { getClientBaseUrl } from '../lib/base-url';
 
 interface GuestbookCountProps {
   /** Initial count to display (optional) */
@@ -29,8 +29,21 @@ export function GuestbookCount({
   const [count, setCount] = useState<number>(initialCount);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
+  const [baseUrl, setBaseUrl] = useState('');
+
+  // Get base URL on mount (client-side only)
+  useEffect(() => {
+    const url = getClientBaseUrl();
+    setBaseUrl(url);
+    console.log('[GuestbookCount] Base URL detected:', url);
+  }, []);
 
   const fetchCount = async () => {
+    if (!baseUrl) {
+      console.log('[GuestbookCount] Base URL not ready yet, skipping fetch');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -71,16 +84,18 @@ export function GuestbookCount({
     }
   };
 
-  // Fetch count on mount
+  // Fetch count on mount (after baseUrl is set)
   useEffect(() => {
-    console.log('[GuestbookCount] Component mounted');
-    fetchCount();
-  }, []);
+    if (baseUrl) {
+      console.log('[GuestbookCount] Base URL ready, fetching count');
+      fetchCount();
+    }
+  }, [baseUrl]);
 
   // Auto-refresh if enabled
   useEffect(() => {
-    if (!autoRefresh) {
-      console.log('[GuestbookCount] Auto-refresh disabled');
+    if (!autoRefresh || !baseUrl) {
+      console.log('[GuestbookCount] Auto-refresh disabled or base URL not ready');
       return;
     }
 
@@ -94,7 +109,7 @@ export function GuestbookCount({
       console.log('[GuestbookCount] Cleaning up auto-refresh interval');
       clearInterval(interval);
     };
-  }, [autoRefresh, refreshInterval]);
+  }, [autoRefresh, refreshInterval, baseUrl]);
 
   // Listen for custom event to refresh count
   useEffect(() => {
@@ -105,7 +120,7 @@ export function GuestbookCount({
 
     window.addEventListener('guestbook:refresh', handleRefresh);
     return () => window.removeEventListener('guestbook:refresh', handleRefresh);
-  }, []);
+  }, [baseUrl]);
 
   const displayDescription = error 
     ? `Unable to load count: ${error}` 

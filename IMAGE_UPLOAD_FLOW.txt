@@ -1,0 +1,173 @@
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    IMAGE UPLOAD FLOW DIAGRAM                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│  STEP 1: User Interaction                                                │
+│  ────────────────────────                                                │
+│                                                                           │
+│  User clicks "Upload Photo" → File picker opens → User selects image    │
+│                                                                           │
+│  ┌────────────────────────────────────────────────────────────┐         │
+│  │  ImageUpload Component                                     │         │
+│  │  • Validates file size (< 10MB)                            │         │
+│  │  • Validates file type (image/jpeg, png, gif, webp)        │         │
+│  │  • Shows preview immediately                               │         │
+│  └────────────────────────────────────────────────────────────┘         │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌──────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: Request Upload Permission                                       │
+│  ────────────────────────────────                                        │
+│                                                                           │
+│  Component → POST /api/images/upload-url                                 │
+│  Body: { fileName: "photo.jpg", fileType: "image/jpeg" }                │
+│                                                                           │
+│  ┌────────────────────────────────────────────────────────────┐         │
+│  │  Upload URL API Endpoint                                   │         │
+│  │  • Validates request                                       │         │
+│  │  • Generates unique filename: images/1234567890-abc123.jpg │         │
+│  │  • Creates presigned URL with AWS S3 SDK                   │         │
+│  │  • URL expires in 1 hour                                   │         │
+│  └────────────────────────────────────────────────────────────┘         │
+│                                                                           │
+│  Response: {                                                              │
+│    uploadUrl: "https://account.r2.cloudflarestorage.com/...",           │
+│    fileKey: "images/1234567890-abc123.jpg",                             │
+│    publicUrl: "https://pub-xxxx.r2.dev/images/1234567890-abc123.jpg"   │
+│  }                                                                        │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌──────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: Direct Upload to R2                                             │
+│  ──────────────────────────                                              │
+│                                                                           │
+│  Component → PUT to presigned URL (DIRECT TO R2, BYPASSES OUR SERVER)   │
+│  Body: <binary image data>                                               │
+│                                                                           │
+│  ┌────────────────────────────────────────────────────────────┐         │
+│  │  Cloudflare R2 Storage                                     │         │
+│  │  • Receives upload directly                                │         │
+│  │  • Stores image in bucket                                  │         │
+│  │  • File available at public URL                            │         │
+│  └────────────────────────────────────────────────────────────┘         │
+│                                                                           │
+│  Progress updates: 0% → 25% → 50% → 75% → 100% ✅                        │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌──────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: Store Image Data in Component                                   │
+│  ─────────────────────────────────────                                   │
+│                                                                           │
+│  Component state updated with:                                           │
+│  {                                                                        │
+│    url: "https://pub-xxxx.r2.dev/images/1234567890-abc123.jpg",        │
+│    alt: "photo",                                                         │
+│    fileKey: "images/1234567890-abc123.jpg"                              │
+│  }                                                                        │
+│                                                                           │
+│  ┌────────────────────────────────────────────────────────────┐         │
+│  │  Hidden Form Fields (Auto-generated)                       │         │
+│  │  <input type="hidden" name="photo1_url" value="https://.."/>        │
+│  │  <input type="hidden" name="photo1_alt" value="photo"/>             │
+│  │  <input type="hidden" name="photo1_fileKey" value="images/..."/>    │
+│  └────────────────────────────────────────────────────────────┘         │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌──────────────────────────────────────────────────────────────────────────┐
+│  STEP 5: Form Submission                                                 │
+│  ──────────────────                                                      │
+│                                                                           │
+│  User fills out rest of form → Clicks Submit                            │
+│  Form → POST /api/timeline/submit                                        │
+│                                                                           │
+│  Form Data includes:                                                     │
+│  • timeline_name: "My Event"                                             │
+│  • timeline_date: "2024-01-15"                                           │
+│  • photo1_url: "https://pub-xxxx.r2.dev/images/1234567890-abc123.jpg"  │
+│  • photo1_alt: "photo"                                                   │
+│  • ... other fields                                                      │
+│                                                                           │
+│  ┌────────────────────────────────────────────────────────────┐         │
+│  │  Timeline Submit API                                       │         │
+│  │  • Extracts form data                                      │         │
+│  │  • Builds CMS field data object                            │         │
+│  │  • Includes photo-1: { url, alt }                          │         │
+│  │  • Creates CMS item via Webflow API                        │         │
+│  │  • Publishes item                                          │         │
+│  └────────────────────────────────────────────────────────────┘         │
+└──────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌──────────────────────────────────────────────────────────────────────────┐
+│  STEP 6: CMS Item Created                                                │
+│  ───────────────────────                                                 │
+│                                                                           │
+│  Webflow CMS Timeline Collection:                                        │
+│  {                                                                        │
+│    id: "676f...",                                                        │
+│    fieldData: {                                                          │
+│      name: "My Event",                                                   │
+│      slug: "my-event",                                                   │
+│      "event-number": 15,                                                 │
+│      "photo-1": {                                                        │
+│        url: "https://pub-xxxx.r2.dev/images/1234567890-abc123.jpg",    │
+│        alt: "photo"                                                      │
+│      },                                                                  │
+│      "photo-2": { ... },                                                 │
+│      ... other fields                                                    │
+│    }                                                                     │
+│  }                                                                        │
+│                                                                           │
+│  ✅ Success! User redirected to timeline page                            │
+│  ✅ Images are now publicly accessible from R2                           │
+│  ✅ Images display in Webflow Designer and published site                │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         KEY ADVANTAGES                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+✅ SECURE       → API tokens never exposed to client
+✅ FAST         → Direct upload to R2 (bypasses our server)
+✅ SCALABLE     → R2 handles storage, we just coordinate
+✅ RELIABLE     → Built-in retry and error handling
+✅ USER-FRIENDLY → Progress bar, preview, validation
+✅ INTEGRATED   → Seamlessly works with Webflow forms
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      ENVIRONMENT VARIABLES                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+SERVER ONLY (Never sent to client):
+  • R2_ACCOUNT_ID
+  • R2_ACCESS_KEY_ID
+  • R2_SECRET_ACCESS_KEY
+  • R2_BUCKET_NAME
+
+PUBLIC (Can be in client code):
+  • R2_PUBLIC_URL (read-only access)
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FILE STRUCTURE                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+src/
+├── components/
+│   ├── ImageUpload.tsx               ← Upload UI component
+│   └── TimelineFormWithUploads.tsx   ← Form wrapper
+├── lib/
+│   └── images/
+│       ├── types.ts                  ← TypeScript interfaces
+│       └── api-client.ts             ← Upload functions
+└── pages/
+    └── api/
+        └── images/
+            └── upload-url.ts         ← Presigned URL endpoint
+
+docs/
+└── cloudflare-r2-image-upload-guide.md  ← Complete documentation
+
+R2_SETUP_CHECKLIST.md                    ← Setup instructions
+IMAGE_UPLOAD_IMPLEMENTATION.md           ← Implementation summary
+NEXT_STEPS.md                            ← Quick start guide
+

@@ -1,0 +1,197 @@
+---
+import MainLayout from '../layouts/main.astro';
+import { baseUrl } from '../lib/base-url';
+---
+
+<MainLayout pageClass="timeline-debug">
+  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <h1 style="font-family: var(--heading-font); margin-bottom: 2rem;">Timeline Form Debug</h1>
+    
+    <div style="background: var(--card); padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+      <h2 style="font-family: var(--heading-font); margin-bottom: 1rem;">Test Configuration</h2>
+      <p>Check API configuration: <a href={`${baseUrl}/api/timeline/test`} target="_blank" style="color: var(--primary);">View Test Endpoint</a></p>
+      <p style="margin-top: 1rem; color: var(--muted-foreground); font-size: 0.875rem;">
+        This will show you if all environment variables are configured correctly.
+      </p>
+    </div>
+
+    <form 
+      id="timeline-form"
+      action={`${baseUrl}/api/timeline/submit`}
+      method="POST"
+      style="background: var(--card); padding: 2rem; border-radius: 8px;"
+    >
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          Name (required)
+        </label>
+        <input 
+          type="text" 
+          name="name" 
+          required
+          placeholder="Your name"
+          style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: var(--background);"
+        />
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          Location
+        </label>
+        <input 
+          type="text" 
+          name="location"
+          placeholder="Where did this happen?"
+          style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: var(--background);"
+        />
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          Memory (required)
+        </label>
+        <textarea 
+          name="memory" 
+          required
+          placeholder="Share your memory"
+          rows="4"
+          style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: var(--background); font-family: inherit;"
+        ></textarea>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          Month & Year
+        </label>
+        <input 
+          type="text" 
+          name="month-year"
+          placeholder="e.g. June 1990, 06/01/2025, June 1 2025"
+          style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: var(--background);"
+        />
+        <p style="font-size: 0.75rem; color: var(--muted-foreground); margin-top: 0.25rem;">
+          Flexible format: "June 1990", "06/2025", "June 1 2025", etc.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          Image Uploads
+        </label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div data-timeline-image-upload="photo1" data-upload-label="Photo 1"></div>
+          <div data-timeline-image-upload="photo2" data-upload-label="Photo 2"></div>
+        </div>
+      </div>
+
+      <button 
+        type="submit"
+        style="background: var(--primary); color: var(--primary-foreground); padding: 0.75rem 2rem; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-family: var(--button-font);"
+      >
+        Submit Timeline Entry
+      </button>
+    </form>
+
+    <div style="background: var(--muted); padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+      <h2 style="font-family: var(--heading-font); margin-bottom: 1rem;">Debug Instructions</h2>
+      <ol style="padding-left: 1.5rem; line-height: 1.8;">
+        <li>Open browser DevTools (F12)</li>
+        <li>Go to "Console" tab</li>
+        <li>Go to "Network" tab</li>
+        <li>Submit the form above</li>
+        <li>Look for:
+          <ul style="margin-top: 0.5rem;">
+            <li>Upload logs in Console (🖼️ emojis)</li>
+            <li>POST request to /api/timeline/submit in Network tab</li>
+            <li>Form data payload in the request</li>
+            <li>Response/redirect from the server</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <div id="debug-output" style="background: #1a1a1a; color: #00ff00; padding: 2rem; border-radius: 8px; margin-top: 2rem; font-family: monospace; font-size: 0.875rem; max-height: 400px; overflow-y: auto;">
+      <div style="color: #00ff00; margin-bottom: 1rem;">📊 Debug Console:</div>
+      <div id="debug-messages"></div>
+    </div>
+  </div>
+</MainLayout>
+
+<script src={`${baseUrl}/timeline-form-embed.js`}></script>
+
+<script is:inline>
+  // Debug logging
+  function debugLog(message, data) {
+    const debugMessages = document.getElementById('debug-messages');
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = document.createElement('div');
+    logEntry.style.marginBottom = '0.5rem';
+    logEntry.innerHTML = `<span style="color: #888;">[${timestamp}]</span> ${message}`;
+    if (data) {
+      logEntry.innerHTML += `<br><span style="color: #00aaff; margin-left: 1rem;">${JSON.stringify(data, null, 2)}</span>`;
+    }
+    debugMessages.appendChild(logEntry);
+    console.log(message, data);
+  }
+
+  // Wait for DOM to load
+  document.addEventListener('DOMContentLoaded', function() {
+    debugLog('🚀 Page loaded');
+    
+    const form = document.getElementById('timeline-form');
+    
+    if (!form) {
+      debugLog('❌ Form not found!');
+      return;
+    }
+    
+    debugLog('✅ Form found', {
+      action: form.action,
+      method: form.method
+    });
+    
+    // Log form submission
+    form.addEventListener('submit', function(e) {
+      debugLog('📤 Form submit event triggered');
+      
+      const formData = new FormData(form);
+      const data = {};
+      for (let [key, value] of formData.entries()) {
+        data[key] = value;
+      }
+      
+      debugLog('📋 Form data being submitted:', data);
+      
+      // Check for hidden image fields
+      const hiddenFields = form.querySelectorAll('input[type="hidden"]');
+      debugLog('🔍 Hidden fields count:', { count: hiddenFields.length });
+      
+      hiddenFields.forEach(field => {
+        debugLog('🔍 Hidden field:', { 
+          name: field.name, 
+          value: field.value.substring(0, 50) + (field.value.length > 50 ? '...' : '')
+        });
+      });
+      
+      // Don't prevent default - let the form submit
+      debugLog('✅ Allowing form to submit to:', form.action);
+    });
+  });
+</script>
+
+<style>
+  .timeline-debug input:hover,
+  .timeline-debug textarea:hover {
+    border-color: var(--primary);
+  }
+
+  .timeline-debug input:focus,
+  .timeline-debug textarea:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .timeline-debug button:hover {
+    opacity: 0.9;
+  }
+</style>
