@@ -9,10 +9,7 @@ const ARCHIVE_DIR = path.join(DOCS_DIR, "archive");
 const OUTPUT_FILE = "MASTER_GUIDE.md";
 const OUTPUT_PATH = path.join(DOCS_DIR, OUTPUT_FILE);
 
-// Order the important ones explicitly; everything else will be appended.
-const ORDERED_FILES = [
-  "README.md",
-];
+const ORDERED_FILES = ["README.md"];
 
 function toNiceTitle(filename) {
   const base = filename.replace(/\.md$/i, "");
@@ -99,6 +96,18 @@ async function main() {
 
   await fs.writeFile(OUTPUT_PATH, combined, "utf8");
   console.log(`✅ Wrote docs/MASTER_GUIDE.md with ${ordered.length} sections.`);
+
+  // Move processed Markdown files into archive
+  for (const filename of ordered) {
+    const srcPath = path.join(ROOT, filename);
+    const destPath = path.join(ARCHIVE_DIR, filename);
+    try {
+      await fs.rename(srcPath, destPath);
+      console.log(`📁 Moved ${filename} → docs/archive/`);
+    } catch (err) {
+      console.error(`❌ Failed to move ${filename}:`, err);
+    }
+  }
 }
 
 main().catch((err) => {
