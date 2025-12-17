@@ -6,15 +6,15 @@
  * 
  * Usage in Webflow:
  * 1. Add data-timeline-image-upload="photo1" to upload containers
- * 2. Add data-app-base-url="/guestbook-form" to the script tag
+ * 2. Add data-app-base-url="https://your-site.webflow.io/guestbook-form" to the script tag
  * 3. Images are automatically compressed and uploaded to R2
- * 4. Hidden fields are created with image URLs for form submission
+ * 4. After form submission, images are attached to the CMS item
  */
 
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import imageCompression from 'browser-image-compression';
-import { MediaImagePlus } from 'iconoir-react';
+import { MediaImagePlus, Check } from 'iconoir-react';
 
 interface ImageData {
   url: string;
@@ -30,23 +30,70 @@ interface ImageUploadEmbedProps {
   label?: string;
   maxSizeMB?: number;
   baseUrl: string;
+  formElement: HTMLFormElement;
 }
 
-function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl }: ImageUploadEmbedProps) {
+// Storage key for images
+const STORAGE_KEY = '__timeline_images__';
+
+// Global store for image data
+const imageStore: Record<string, ImageData> = {};
+
+// Load images from sessionStorage on init
+function loadImagesFromStorage() {
+  try {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const data = JSON.parse(stored);
+      Object.assign(imageStore, data);
+      (window as any).__imageData = imageStore;
+      console.log('📦 Loaded images from storage:', Object.keys(data));
+    }
+  } catch (e) {
+    console.error('Failed to load images from storage:', e);
+  }
+}
+
+// Save images to sessionStorage
+function saveImagesToStorage() {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(imageStore));
+    console.log('💾 Saved images to storage:', Object.keys(imageStore));
+  } catch (e) {
+    console.error('Failed to save images to storage:', e);
+  }
+}
+
+function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl, formElement }: ImageUploadEmbedProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [compressing, setCompressing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [uploadedImage, setUploadedImage] = useState<ImageData | null>(null);
+  const [uploadComplete, setUploadComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
+  // Load existing image on mount
   useEffect(() => {
-    if (uploadedImage) {
-      console.log(`💾 ${uploadId} upload persisted:`, uploadedImage.url.substring(0, 50) + '...');
+    if (imageStore[uploadId]) {
+      setUploadedImage(imageStore[uploadId]);
+      setUploadComplete(true);
+      setPreview(imageStore[uploadId].url);
+      console.log(`📷 [${uploadId}] Restored from storage`);
     }
-  }, [uploadedImage, uploadId]);
+  }, [uploadId]);
+
+  useEffect(() => {
+    if (uploadedImage && !uploadComplete) {
+      console.log(`💾 [${uploadId}] Stored image data`);
+      imageStore[uploadId] = uploadedImage;
+      (window as any).__imageData = imageStore;
+      saveImagesToStorage();
+      setUploadComplete(true);
+    }
+  }, [uploadedImage, uploadId, uploadComplete]);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -65,6 +112,7 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
 
     setFile(selectedFile);
     setError(null);
+    setUploadComplete(false);
 
     const previewUrl = URL.createObjectURL(selectedFile);
     setPreview(previewUrl);
@@ -112,7 +160,6 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
 
   const uploadToR2 = async (imageFile: File): Promise<ImageData> => {
     console.log(`📤 [${uploadId}] Uploading to R2...`);
-    console.log(`🌐 [${uploadId}] Base URL:`, baseUrl);
     setUploading(true);
 
     try {
@@ -120,7 +167,7 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
       formData.append('file', imageFile);
 
       const uploadUrl = `${baseUrl}/api/images/upload`;
-      console.log(`📍 [${uploadId}] Full upload URL:`, uploadUrl);
+      console.log(`📤 [${uploadId}] Upload URL:`, uploadUrl);
 
       const response = await fetch(uploadUrl, {
         method: 'POST',
@@ -154,52 +201,17 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
   const compressAndUpload = async (imageFile: File) => {
     try {
       setProgress(0);
-      
       const compressedFile = await compressImage(imageFile);
-      
       setProgress(50);
       const imageData = await uploadToR2(compressedFile);
-      
       setUploadedImage(imageData);
-      
-      createHiddenFields(imageData);
-      
       console.log(`✅ [${uploadId}] Complete`);
-      
     } catch (err: any) {
       console.error(`❌ [${uploadId}] Failed:`, err);
       setError(err.message || 'Upload failed');
       setPreview(null);
       setFile(null);
     }
-  };
-
-  const createHiddenFields = (imageData: ImageData) => {
-    const uploadContainer = document.querySelector(`[data-timeline-image-upload="${uploadId}"]`);
-    const form = uploadContainer?.closest('form');
-    
-    if (!form) {
-      console.error(`❌ [${uploadId}] No form found`);
-      return;
-    }
-
-    const existingFields = form.querySelectorAll(`input[name^="${uploadId}_"]`);
-    existingFields.forEach(field => field.remove());
-
-    const createHiddenField = (name: string, value: string) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value;
-      input.setAttribute('data-upload-id', uploadId);
-      form.appendChild(input);
-    };
-
-    createHiddenField(`${uploadId}_url`, imageData.url);
-    createHiddenField(`${uploadId}_alt`, imageData.alt || '');
-    createHiddenField(`${uploadId}_fileKey`, imageData.fileKey);
-
-    console.log(`✅ [${uploadId}] Hidden fields created`);
   };
 
   const handleRemove = (e: React.MouseEvent) => {
@@ -209,15 +221,15 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
     setFile(null);
     setPreview(null);
     setUploadedImage(null);
+    setUploadComplete(false);
     setError(null);
     setProgress(0);
 
-    const uploadContainer = document.querySelector(`[data-timeline-image-upload="${uploadId}"]`);
-    const form = uploadContainer?.closest('form');
-    if (form) {
-      const fields = form.querySelectorAll(`input[name^="${uploadId}_"]`);
-      fields.forEach(field => field.remove());
-    }
+    delete imageStore[uploadId];
+    (window as any).__imageData = imageStore;
+    saveImagesToStorage();
+    
+    console.log(`✅ [${uploadId}] Removed`);
   };
 
   const containerStyle: React.CSSProperties = {
@@ -228,13 +240,16 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '5px',
-    backgroundColor: isHovered 
-      ? 'rgba(201, 135, 105, 0.1)' 
-      : '#F5F1EB',
+    backgroundColor: uploadComplete
+      ? '#C98769'  // Primary color when upload complete
+      : isHovered 
+        ? 'rgba(201, 135, 105, 0.1)' 
+        : '#F5F1EB',
     transition: 'background-color 400ms ease',
     cursor: 'pointer',
-    color: '#C98769',
+    color: uploadComplete ? '#FFFFFF' : '#C98769',
     position: 'relative',
+    overflow: 'hidden',
   };
 
   return (
@@ -284,89 +299,130 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
           </label>
         </div>
       ) : (
-        <div style={{
-          ...containerStyle,
-          padding: 0,
-          overflow: 'hidden',
-        }}>
+        <div style={containerStyle}>
+          {/* Background Image */}
           <img
             src={preview}
             alt="Preview"
             style={{
+              position: 'absolute',
+              inset: 0,
               width: '100%',
               height: '100%',
-              minHeight: '180px',
               objectFit: 'cover',
             }}
           />
           
+          {/* Upload Progress Overlay - fills from bottom to top */}
           {(compressing || uploading) && (
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundColor: 'rgba(41, 112, 141, 0.9)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#F5F1EB',
-              padding: '1rem',
-            }}>
-              <div style={{ marginBottom: '12px', fontSize: '14px', fontWeight: 600 }}>
-                {compressing ? 'Compressing...' : 'Uploading...'}
-              </div>
+            <>
+              {/* Progress fill */}
               <div style={{
-                width: '80%',
-                maxWidth: '140px',
-                height: '8px',
-                backgroundColor: 'rgba(245, 241, 235, 0.3)',
-                borderRadius: '4px',
-                overflow: 'hidden',
-              }}>
-                <div style={{
-                  width: `${progress}%`,
-                  height: '100%',
-                  backgroundColor: '#C98769',
-                  transition: 'width 0.3s ease',
-                }} />
-              </div>
-              <div style={{ marginTop: '8px', fontSize: '12px' }}>
-                {Math.round(progress)}%
-              </div>
-            </div>
-          )}
-          
-          {uploadedImage && !compressing && !uploading && (
-            <button
-              type="button"
-              onClick={handleRemove}
-              style={{
                 position: 'absolute',
-                top: '8px',
-                right: '8px',
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(41, 112, 141, 0.8)',
-                border: 'none',
-                color: '#F5F1EB',
-                cursor: 'pointer',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: `${progress}%`,
+                backgroundColor: 'rgba(201, 135, 105, 0.85)',
+                transition: 'height 0.3s ease',
+                zIndex: 1,
+              }} />
+              
+              {/* Progress text */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '20px',
-                fontWeight: 'bold',
-                transition: 'background-color 0.2s ease',
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(41, 112, 141, 0.95)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(41, 112, 141, 0.8)';
-              }}
-            >
-              ×
-            </button>
+                color: '#F5F1EB',
+                padding: '1rem',
+                zIndex: 2,
+              }}>
+                <div style={{ 
+                  marginBottom: '8px', 
+                  fontSize: '14px', 
+                  fontWeight: 600,
+                  fontFamily: 'Aileron, Arial, sans-serif',
+                }}>
+                  {compressing ? 'Compressing...' : 'Uploading...'}
+                </div>
+                <div style={{ 
+                  fontSize: '20px', 
+                  fontWeight: 'bold',
+                  fontFamily: 'Aileron, Arial, sans-serif',
+                }}>
+                  {Math.round(progress)}%
+                </div>
+              </div>
+            </>
+          )}
+          
+          {/* Upload Complete Overlay */}
+          {uploadComplete && !compressing && !uploading && (
+            <>
+              {/* Success fill overlay */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: 'rgba(201, 135, 105, 0.9)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1,
+              }}>
+                <Check
+                  width={60}
+                  height={60}
+                  strokeWidth={2.5}
+                  color="#FFFFFF"
+                  style={{ marginBottom: '8px' }}
+                />
+                <div style={{
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#FFFFFF',
+                  fontFamily: 'Aileron, Arial, sans-serif',
+                }}>
+                  Upload Complete
+                </div>
+              </div>
+              
+              {/* Remove button */}
+              <button
+                type="button"
+                onClick={handleRemove}
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(41, 112, 141, 0.9)',
+                  border: 'none',
+                  color: '#F5F1EB',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  transition: 'background-color 0.2s ease',
+                  zIndex: 2,
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(41, 112, 141, 1)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(41, 112, 141, 0.9)';
+                }}
+              >
+                ×
+              </button>
+            </>
           )}
         </div>
       )}
@@ -379,6 +435,7 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
           color: '#FFFFFF',
           borderRadius: '4px',
           fontSize: '12px',
+          fontFamily: 'Aileron, Arial, sans-serif',
         }}>
           {error}
         </div>
@@ -387,53 +444,304 @@ function ImageUploadEmbed({ uploadId, label = 'Photo 1', maxSizeMB = 10, baseUrl
   );
 }
 
+async function handleFormSubmissionWithImages(
+  form: HTMLFormElement,
+  baseUrl: string,
+  originalAction: string
+): Promise<boolean> {
+  console.log('');
+  console.log('═══════════════════════════════════════════');
+  console.log('📝 CUSTOM FORM SUBMISSION WITH IMAGES');
+  console.log('═══════════════════════════════════════════');
+  
+  const imageData = (window as any).__imageData || {};
+  const imageCount = Object.keys(imageData).length;
+  
+  console.log(`📷 Images uploaded: ${imageCount}`);
+  if (imageCount === 0) {
+    console.log('⚠️ NO IMAGES FOUND! Proceeding with normal form submission...');
+    return false; // Allow normal submission
+  }
+  
+  Object.keys(imageData).forEach(key => {
+    console.log(`  ✅ ${key}:`, imageData[key].url.substring(0, 50) + '...');
+  });
+  
+  // Create FormData from the form
+  const formData = new FormData(form);
+  
+  console.log('📋 Form fields:');
+  for (const [key, value] of formData.entries()) {
+    if (typeof value === 'string') {
+      console.log(`  ${key}:`, value.substring(0, 50) + (value.length > 50 ? '...' : ''));
+    }
+  }
+  
+  console.log('');
+  console.log('📤 Submitting form to API...');
+  console.log('📍 URL:', originalAction);
+  
+  try {
+    const response = await fetch(originalAction, {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Form submission failed: ${response.status}`);
+    }
+    
+    // The API returns a redirect response
+    const redirectUrl = response.url;
+    console.log('✅ Form submitted successfully');
+    console.log('🔗 Redirect URL:', redirectUrl);
+    
+    // Extract item ID from redirect URL
+    const urlObj = new URL(redirectUrl);
+    const itemId = urlObj.searchParams.get('id');
+    
+    if (!itemId) {
+      console.error('❌ No item ID in redirect URL');
+      console.log('═══════════════════════════════════════════');
+      window.location.href = redirectUrl;
+      return true;
+    }
+    
+    console.log('🎯 Item ID:', itemId);
+    console.log('');
+    console.log('🖼️ Attaching images to CMS item...');
+    
+    const payload: any = {};
+    Object.entries(imageData).forEach(([uploadId, data]: [string, any]) => {
+      payload[uploadId] = {
+        url: data.url,
+        alt: data.alt || ''
+      };
+    });
+    
+    console.log('📦 Payload:', payload);
+    
+    const attachResponse = await fetch(`${baseUrl}/api/timeline/attach-images`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        itemId,
+        images: payload
+      })
+    });
+    
+    if (!attachResponse.ok) {
+      const errorText = await attachResponse.text();
+      console.error('❌ Image attachment failed:', errorText);
+      throw new Error(`Image attachment failed: ${attachResponse.status}`);
+    }
+    
+    const attachResult = await attachResponse.json();
+    console.log('✅ Images attached successfully');
+    console.log('Result:', attachResult);
+    
+    // Clear the storage after successful attachment
+    sessionStorage.removeItem(STORAGE_KEY);
+    console.log('🧹 Cleared image storage');
+    
+    console.log('═══════════════════════════════════════════');
+    console.log('');
+    
+    // Redirect to success page
+    console.log('🔄 Redirecting to:', redirectUrl);
+    window.location.href = redirectUrl;
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Form submission failed:', error);
+    console.log('═══════════════════════════════════════════');
+    console.log('');
+    alert('Failed to submit form. Please try again.');
+    return true;
+  }
+}
+
 function initTimelineImageUploads() {
-  console.log('🚀 Initializing Timeline Image Uploads...');
+  console.log('');
+  console.log('═══════════════════════════════════════════');
+  console.log('🚀 TIMELINE IMAGE UPLOADS - INITIALIZATION');
+  console.log('═══════════════════════════════════════════');
   
-  // Get base URL from script tag
-  const scriptTag = document.querySelector('script[src*="timeline-form-embed"]');
-  const baseUrl = scriptTag?.getAttribute('data-app-base-url') || '';
+  // Load any existing images from storage
+  loadImagesFromStorage();
   
-  console.log('🌐 Base URL from script tag:', baseUrl);
+  // Find all possible script tags
+  const scriptTags = document.querySelectorAll('script[src*="timeline-form-embed"]');
+  console.log('📜 Script tags found:', scriptTags.length);
+  
+  let baseUrl = '';
+  let scriptTag: Element | null = null;
+  
+  // Try to find the script tag with data-app-base-url attribute
+  scriptTags.forEach(tag => {
+    const url = tag.getAttribute('data-app-base-url');
+    if (url) {
+      baseUrl = url;
+      scriptTag = tag;
+    }
+  });
+  
+  // If not found, try the first script tag
+  if (!scriptTag && scriptTags.length > 0) {
+    scriptTag = scriptTags[0];
+  }
+  
+  if (scriptTag) {
+    const attrs = Array.from(scriptTag.attributes).map(a => `${a.name}="${a.value}"`);
+    console.log('📜 Script attributes:', attrs.join(', '));
+  }
+  
+  console.log('🌐 Base URL from attribute:', baseUrl || '❌ NOT SET');
   
   if (!baseUrl) {
-    console.error('❌ ERROR: data-app-base-url not set on script tag!');
-    console.error('Add data-app-base-url="/guestbook-form" to your script tag');
+    console.error('');
+    console.error('═══════════════════════════════════════════');
+    console.error('❌ CRITICAL ERROR: Missing base URL!');
+    console.error('═══════════════════════════════════════════');
+    console.error('Add data-app-base-url="https://your-site.webflow.io/guestbook-form" to the script tag');
+    console.error('═══════════════════════════════════════════');
+    console.error('');
     return;
   }
   
+  // Find all upload containers
   const uploadContainers = document.querySelectorAll('[data-timeline-image-upload]');
-  console.log(`Found ${uploadContainers.length} upload containers`);
+  console.log(`📦 Upload containers found: ${uploadContainers.length}`);
   
-  uploadContainers.forEach((container) => {
+  if (uploadContainers.length === 0) {
+    console.warn('');
+    console.warn('═══════════════════════════════════════════');
+    console.warn('⚠️ WARNING: No upload containers found!');
+    console.warn('═══════════════════════════════════════════');
+    console.warn('');
+    return;
+  }
+  
+  // Log details about each container
+  uploadContainers.forEach((container, index) => {
     const uploadId = container.getAttribute('data-timeline-image-upload');
-    const label = container.getAttribute('data-upload-label') || 'Photo 1';
+    const label = container.getAttribute('data-upload-label');
+    const hasForm = !!container.closest('form');
+    console.log(`  ${index + 1}. Container:`, {
+      uploadId,
+      label,
+      hasForm,
+    });
+  });
+  
+  const formMap = new Map<HTMLFormElement, HTMLElement[]>();
+  
+  uploadContainers.forEach((container, index) => {
+    const uploadId = container.getAttribute('data-timeline-image-upload');
+    const label = container.getAttribute('data-upload-label') || 'Photo ' + (index + 1);
     const maxSize = parseInt(container.getAttribute('data-max-size-mb') || '10', 10);
     
-    if (!uploadId) return;
+    if (!uploadId) {
+      console.error(`❌ Container ${index + 1} missing uploadId`);
+      return;
+    }
 
-    console.log(`Initializing: ${uploadId}`);
+    const form = container.closest('form');
+    if (!form) {
+      console.error(`❌ Container ${index + 1} (${uploadId}) not inside a form`);
+      return;
+    }
     
-    container.innerHTML = '';
+    if (!formMap.has(form)) {
+      formMap.set(form, []);
+    }
+    formMap.get(form)!.push(container as HTMLElement);
+
+    console.log(`✅ Initializing: ${uploadId}`);
     
+    // Clear existing content
+    const htmlContainer = container as HTMLElement;
+    console.log(`  🧹 Clearing container (had ${htmlContainer.children.length} children)`);
+    htmlContainer.innerHTML = '';
+    
+    // Create React root
+    console.log(`  ⚛️ Creating React root for ${uploadId}`);
     const root = createRoot(container);
+    
+    // Render component
+    console.log(`  🎨 Rendering component for ${uploadId}`);
     root.render(
       <ImageUploadEmbed
         uploadId={uploadId}
         label={label}
         maxSizeMB={maxSize}
         baseUrl={baseUrl}
+        formElement={form}
       />
     );
+    
+    console.log(`  ✅ Component rendered for ${uploadId}`);
   });
   
-  console.log('✅ Timeline Image Uploads initialized');
+  // HIJACK form submission by replacing the action URL temporarily
+  console.log('');
+  console.log('🔒 Hijacking form actions...');
+  
+  formMap.forEach((containers, form) => {
+    const originalAction = form.action;
+    console.log(`  📝 Form:`, form.id || form.name || '(unnamed)');
+    console.log(`  📍 Original action:`, originalAction);
+    
+    // Store original action
+    (form as any).__originalAction = originalAction;
+    
+    // Replace form action with a fake URL that we can intercept
+    const fakeAction = 'about:blank#image-upload-intercept';
+    form.action = fakeAction;
+    console.log(`  🔄 Replaced with:`, fakeAction);
+    
+    // Listen for form submit
+    form.addEventListener('submit', async function(event) {
+      console.log('🚨 FORM SUBMIT EVENT - CHECKING ACTION');
+      console.log('   Current action:', form.action);
+      
+      // Check if this is our intercepted submission
+      if (form.action.includes('image-upload-intercept')) {
+        console.log('   ✅ This is our intercepted form!');
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        
+        const handled = await handleFormSubmissionWithImages(form, baseUrl, originalAction);
+        
+        if (!handled) {
+          // No images, restore original action and resubmit
+          console.log('   🔄 No images, restoring action and resubmitting...');
+          form.action = originalAction;
+          form.submit();
+        }
+      } else {
+        console.log('   ⚠️ Normal form submission (action was restored)');
+      }
+    }, true);
+    
+    console.log(`  ✅ Form action hijacked`);
+  });
+  
+  console.log('');
+  console.log('✅ Timeline Image Uploads initialized successfully');
+  console.log('═══════════════════════════════════════════');
+  console.log('');
 }
 
+// Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initTimelineImageUploads);
 } else {
   initTimelineImageUploads();
 }
 
+// Also expose for manual initialization
 (window as any).initTimelineImageUploads = initTimelineImageUploads;

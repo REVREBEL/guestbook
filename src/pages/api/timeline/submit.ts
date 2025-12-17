@@ -1,7 +1,11 @@
 /**
  * Timeline Form Submission Endpoint
  * 
- * Receives POST from Webflow form and writes to CMS.
+ * Receives POST from Webflow form with file uploads
+ * 1. Uploads files to R2 using Webflow Cloud's automatic binding
+ * 2. Creates CMS item with data + image URLs
+ * 3. Publishes item
+ * 4. Returns JSON response (no redirect - let Webflow form handle it)
  */
 
 import type { APIRoute } from 'astro';
@@ -16,14 +20,17 @@ export const GET: APIRoute = async ({ locals }) => {
                           import.meta.env.WEBFLOW_CMS_SITE_API_TOKEN);
   const hasCollectionId = !!(locals?.runtime?.env?.TIMELINE_COLLECTION_ID ||
                              import.meta.env.TIMELINE_COLLECTION_ID);
+  const hasR2Bucket = !!locals?.runtime?.env?.R2_BUCKET;
   
   return new Response(JSON.stringify({
-    message: 'Timeline API is working! Use POST to submit data.',
+    message: 'Timeline API is working! Use POST to submit data with file uploads.',
     timestamp: new Date().toISOString(),
     config: {
       hasWriteToken,
       hasReadToken,
       hasCollectionId,
+      hasR2Bucket,
+      r2BucketBinding: hasR2Bucket ? 'CONNECTED' : 'NOT_CONNECTED',
       collectionId: locals?.runtime?.env?.TIMELINE_COLLECTION_ID || import.meta.env.TIMELINE_COLLECTION_ID || 'NOT SET'
     }
   }), {
@@ -68,6 +75,22 @@ export const POST: APIRoute = async ({ request, locals }) => {
       });
     }
 
+    // Get R2 bucket binding from Webflow Cloud
+    const r2Bucket = locals?.runtime?.env?.R2_BUCKET;
+    const hasR2 = !!r2Bucket;
+
+    // Get public URL for R2 bucket
+    const r2PublicDomain = locals?.runtime?.env?.R2_PUBLIC_DOMAIN || 
+                          locals?.runtime?.env?.R2_PUBLIC_URL ||
+                          `https://${locals?.runtime?.env?.CLOUDFLARE_ACCOUNT_ID || 'pub'}.r2.dev`;
+
+    console.log('☁️ R2 Bucket:', {
+      hasBinding: hasR2,
+      bindingName: 'R2_BUCKET',
+      publicDomain: r2PublicDomain,
+      status: hasR2 ? 'CONNECTED' : 'NOT_AVAILABLE'
+    });
+
     const baseApiUrl = locals?.runtime?.env?.WEBFLOW_API_HOST || 
                        import.meta.env.WEBFLOW_API_HOST;
     
@@ -81,61 +104,45 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Parse form data
     const formData = await request.formData();
     
-    const formEntries = Object.fromEntries(formData.entries());
+    // Log form data (but not files)
+    const formEntries: Record<string, any> = {};
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        formEntries[key] = { fileName: value.name, size: value.size, type: value.type };
+      } else {
+        formEntries[key] = value;
+      }
+    }
     console.log('📋 Form Data Received:', formEntries);
-    console.log('📋 Form Data Keys:', Object.keys(formEntries));
+    console.log('📋 Form Data Keys:', Array.from(formData.keys()));
     
-    // Get collection ID from form or environment variable
-    const collectionIdFromEnv = locals?.runtime?.env?.TIMELINE_COLLECTION_ID ||
-                                import.meta.env.TIMELINE_COLLECTION_ID;
+    // Get collection ID
+    const collectionId = locals?.runtime?.env?.TIMELINE_COLLECTION_ID ||
+                        import.meta.env.TIMELINE_COLLECTION_ID;
     
-    const collectionIdFromForm = formData.get('collectionId') as string;
-    
-    const collectionId = collectionIdFromForm || collectionIdFromEnv;
-    
-    console.log('📁 Collection ID Sources:', {
-      fromEnv: collectionIdFromEnv || 'NOT SET',
-      fromForm: collectionIdFromForm || 'NOT PROVIDED',
-      finalValue: collectionId || 'MISSING'
-    });
+    console.log('📁 Collection ID:', collectionId || 'MISSING');
     
     if (!collectionId) {
-      console.error('❌ Missing TIMELINE_COLLECTION_ID');
-      console.error('❌ Please set TIMELINE_COLLECTION_ID environment variable in Webflow Cloud');
-      return new Response(JSON.stringify({ 
-        success: false,
-        error: 'Missing collection ID - set TIMELINE_COLLECTION_ID in Webflow Cloud environment variables' 
-      }), { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      throw new Error('Missing TIMELINE_COLLECTION_ID environment variable');
     }
 
-    // Validate collection ID format (should be 24 hex characters)
     if (!/^[0-9a-f]{24}$/i.test(collectionId)) {
-      console.error('❌ Invalid collection ID format:', collectionId);
-      console.error('❌ Expected 24 hex characters, got:', collectionId.length, 'characters');
-      return new Response(JSON.stringify({ 
-        success: false,
-        error: `Invalid collection ID format: ${collectionId}` 
-      }), { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      throw new Error(`Invalid collection ID format: ${collectionId}`);
     }
 
-    // Generate slug from timeline name
-    const timelineName = formData.get('timeline_name') as string || 
-                        formData.get('event-name-main') as string ||
-                        formData.get('name') as string || '';
+    // Extract timeline name
+    const timelineLine1 = formData.get('timeline_name_line_1') as string || '';
+    const timelineLine2 = formData.get('timeline_name_line_2') as string || '';
+    const timelineName = timelineLine1 || timelineLine2 || 
+                        formData.get('name') as string || 
+                        'Untitled Event';
     
     console.log('📝 Timeline Name:', timelineName);
     
-    const slug = timelineName
-      .toLowerCase()
+    const slug = (timelineName.toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '') || 
-      `timeline-${Date.now()}`;
+      `timeline-${Date.now()}`) + `-${Date.now().toString().slice(-6)}`;
     
     console.log('🔗 Generated Slug:', slug);
 
@@ -143,35 +150,53 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const editCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     console.log('🔐 Edit Code:', editCode);
 
-    // Get the max event-number to increment it
+    // Get the max event-number (timeline_id) to increment it
     let nextEventNumber = 1;
     try {
-      console.log('🔢 Fetching existing items to determine next event number...');
-      const existingItems = await client.collections.items.listItemsLive(collectionId, {
-        limit: 100,
-        offset: 0
-      });
+      console.log('🔢 Fetching ALL items to find max timeline_id...');
+      let allItems: any[] = [];
+      let offset = 0;
+      const limit = 100;
       
-      console.log('📊 Existing Items Count:', existingItems.items?.length || 0);
+      while (true) {
+        const batch = await client.collections.items.listItems(collectionId, {
+          limit,
+          offset
+        });
+        
+        if (batch.items && batch.items.length > 0) {
+          allItems = allItems.concat(batch.items);
+          console.log(`   Fetched ${batch.items.length} items (offset ${offset})`);
+          
+          if (batch.items.length < limit) break;
+          offset += limit;
+        } else {
+          break;
+        }
+      }
       
-      if (existingItems.items && existingItems.items.length > 0) {
-        const maxId = existingItems.items.reduce((max, item) => {
+      console.log(`📊 Total Items Found: ${allItems.length}`);
+      
+      if (allItems.length > 0) {
+        const maxId = allItems.reduce((max, item) => {
           const itemId = item.fieldData['event-number'] as number || 0;
           return Math.max(max, itemId);
         }, 0);
         nextEventNumber = maxId + 1;
+        console.log(`   Current max timeline_id: ${maxId}`);
       }
     } catch (error) {
-      console.error('⚠️ Error getting max event-number, using 1:', error);
+      console.error('⚠️ Error getting max event-number:', error);
+      console.log('   Defaulting to 1');
     }
     
-    console.log('🔢 Next Event Number:', nextEventNumber);
+    console.log('🔢 Next Event Number (timeline_id):', nextEventNumber);
 
     // Determine if event number is even or odd
     const isEven = nextEventNumber % 2 === 0;
-    console.log('🔢 Is Even:', isEven);
+    console.log('🔢 Is Even (timeline_id_even_odd):', isEven);
 
-    // Parse the timeline date using flexible date parser
+    // Parse the timeline date
     const monthYearInput = formData.get('month-year') as string || 
                           formData.get('timeline_date') as string || 
                           formData.get('date-added') as string || '';
@@ -184,33 +209,80 @@ export const POST: APIRoute = async ({ request, locals }) => {
       formatted: new Date(timelineDate).toLocaleDateString()
     });
 
-    // Get event type (if provided)
+    // Get event type
     const eventType = formData.get('timeline_type') as string || 
-                     formData.get('event-type') as string ||
-                     '';
+                     formData.get('event-type') as string || '';
     console.log('🏷️ Event Type:', eventType || 'none');
 
-    // Get origin (default to 'webflow')
-    const origin = formData.get('origin') as string || 'webflow';
-    console.log('🌍 Origin:', origin);
+    // Process file uploads to R2 using Webflow Cloud binding
+    const uploadedImages: Array<{ url: string; alt: string } | null> = [null, null];
+    
+    const fileFields = ['fileToUpload1', 'fileToUpload2'];
+    
+    if (hasR2) {
+      for (let i = 0; i < fileFields.length; i++) {
+        const fieldName = fileFields[i];
+        const file = formData.get(fieldName);
+        
+        if (file && file instanceof File && file.size > 0) {
+          console.log(`📤 Processing ${fieldName}:`, {
+            name: file.name,
+            size: file.size,
+            type: file.type
+          });
+          
+          try {
+            // Generate unique key for R2 storage
+            const timestamp = Date.now();
+            const randomString = Math.random().toString(36).substring(2, 8);
+            const fileExtension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+            const fileKey = `timeline-images/${timestamp}-${randomString}.${fileExtension}`;
+            
+            console.log(`   Uploading to R2: ${fileKey}`);
+            
+            // Convert file to buffer
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = new Uint8Array(arrayBuffer);
+            
+            // Upload to R2 using Webflow Cloud binding
+            await r2Bucket.put(fileKey, buffer, {
+              httpMetadata: {
+                contentType: file.type || 'image/jpeg',
+              },
+            });
+            
+            // Construct public URL using the R2 public domain
+            const imageUrl = `${r2PublicDomain}/${fileKey}`;
+            
+            console.log(`   ✅ Uploaded to R2: ${fileKey}`);
+            
+            uploadedImages[i] = {
+              url: imageUrl,
+              alt: file.name
+            };
+          } catch (uploadError: any) {
+            console.error(`❌ Failed to upload ${fieldName}:`, uploadError);
+            console.error('   Error:', uploadError.message);
+          }
+        } else {
+          console.log(`   No file for ${fieldName}`);
+        }
+      }
+    } else {
+      console.log('⚠️ R2 bucket not available - skipping image uploads');
+      console.log('   Images will not be attached to the timeline entry');
+    }
 
-    // Extract image data from hidden fields
-    const photo1Url = formData.get('photo1_url') as string || '';
-    const photo1Alt = formData.get('photo1_alt') as string || '';
-    
-    const photo2Url = formData.get('photo2_url') as string || '';
-    const photo2Alt = formData.get('photo2_alt') as string || '';
-    
-    console.log('🖼️ Images:', {
-      photo1: photo1Url ? `Yes (${photo1Url.substring(0, 50)}...)` : 'No',
-      photo2: photo2Url ? `Yes (${photo2Url.substring(0, 50)}...)` : 'No'
+    console.log('🖼️ Images Uploaded:', {
+      photo1: uploadedImages[0] ? uploadedImages[0].url.substring(0, 60) + '...' : 'none',
+      photo2: uploadedImages[1] ? uploadedImages[1].url.substring(0, 60) + '...' : 'none'
     });
 
-    // Build CMS field data - using the actual field names from the collection
+    // Build CMS field data
     const fieldData: Record<string, any> = {
       // Required fields
-      'name': timelineName, // timeline_name (required)
-      'slug': slug, // slug (required)
+      'name': timelineName,
+      'slug': slug,
       
       // Event identification
       'event-number': nextEventNumber, // timeline_id
@@ -221,48 +293,57 @@ export const POST: APIRoute = async ({ request, locals }) => {
       'date-added': timelineDate, // timeline_date (actual event date)
       
       // Event details
-      'event-name': formData.get('timeline_name_line_1') as string || '', // timeline_name_line_1
-      'event-name-main': formData.get('timeline_name_line_2') as string || timelineName, // timeline_name_line_2
-      'description': formData.get('memory') as string || formData.get('timeline_detail') as string || '', // timeline-detail
-      'event-type': eventType, // timeline_type
+      'event-name': timelineLine1,
+      'event-name-main': timelineLine2 || timelineName,
+      'description': formData.get('timeline_detail') as string || formData.get('memory') as string || '',
+      'event-type': eventType,
       
-      // Location - CORRECTED FIELD NAME
-      'timeline-location': formData.get('location') as string || formData.get('timeline_location') as string || '', // timeline_location
+      // Location
+      'timeline-location': formData.get('timeline_location') as string || formData.get('location') as string || '',
       
       // User information
-      'full-name': formData.get('name') as string || formData.get('full_name') as string || '', // full_name
-      'email': formData.get('email') as string || '', // email
-      'posted-by-user-name': formData.get('posted_by_name') as string || formData.get('name') as string || formData.get('full_name') as string || '', // posted_by_name
+      'full-name': formData.get('full_name') as string || formData.get('name') as string || '',
+      'email': formData.get('email') as string || '',
+      'posted-by-user-name': formData.get('full_name') as string || formData.get('name') as string || '',
       
-      // Image fields
-      'photo-1': photo1Url ? {
-        url: photo1Url,
-        alt: photo1Alt || 'Timeline photo 1'
-      } : undefined,
-      'photo-2': photo2Url ? {
-        url: photo2Url,
-        alt: photo2Alt || 'Timeline photo 2'
-      } : undefined,
+      // Images from R2
+      ...(uploadedImages[0] && {
+        'photo-1': {
+          url: uploadedImages[0].url,
+          alt: uploadedImages[0].alt || 'Timeline photo 1'
+        }
+      }),
+      ...(uploadedImages[1] && {
+        'photo-2': {
+          url: uploadedImages[1].url,
+          alt: uploadedImages[1].alt || 'Timeline photo 2'
+        }
+      }),
       
-      // Metadata
-      'origin': origin, // origin (facebook or webflow)
-      'edit-code': editCode, // edit-code (6-character code)
-      'permalink': '', // timeline-permalink (can be populated later)
+      // Metadata - SET AS REQUIRED
+      'origin': 'webflow', // ALWAYS webflow
+      'edit-code': editCode,
+      'permalink': '',
       
-      // Status flags
-      'synced': false, // timeline_sync
-      'approved': false, // approved (needs manual approval)
-      'active': true, // active
+      // Status flags - SET AS REQUIRED
+      'synced': false,
+      'approved': true, // SET TO TRUE as required
+      'active': true, // SET TO TRUE as required
       '_archived': false,
-      '_draft': false,
+      '_draft': false, // NOT draft - will be published
     };
 
-    // Remove undefined fields
-    Object.keys(fieldData).forEach(key => 
-      fieldData[key] === undefined && delete fieldData[key]
-    );
-
-    console.log('📤 CMS Field Data:', JSON.stringify(fieldData, null, 2));
+    console.log('📤 CMS Field Data:', {
+      name: fieldData.name,
+      slug: fieldData.slug,
+      'event-number (timeline_id)': fieldData['event-number'],
+      'even-number (timeline_id_even_odd)': fieldData['even-number'],
+      origin: fieldData.origin,
+      approved: fieldData.approved,
+      active: fieldData.active,
+      hasPhoto1: !!fieldData['photo-1'],
+      hasPhoto2: !!fieldData['photo-2'],
+    });
 
     console.log('🚀 Creating CMS item...');
     
@@ -272,35 +353,50 @@ export const POST: APIRoute = async ({ request, locals }) => {
       { fieldData }
     );
 
-    console.log('✅ CMS item created:', response.id);
-    console.log('📋 CMS Response:', JSON.stringify(response, null, 2));
+    console.log('✅ CMS item created with ID:', response.id);
+    console.log('📋 CMS Response Summary:', {
+      id: response.id,
+      slug: response.fieldData?.slug,
+      isDraft: response.isDraft,
+      hasPhoto1: !!(response.fieldData as any)?.['photo-1'],
+      hasPhoto2: !!(response.fieldData as any)?.['photo-2'],
+    });
 
-    // Publish the item immediately so it appears in live queries
+    // Publish the item to make it live
     if (response.id) {
       try {
-        console.log('📢 Publishing item...');
-        await client.collections.items.publishItem(collectionId, response.id);
-        console.log('✅ Timeline item published successfully:', response.id);
-      } catch (publishError) {
+        console.log('📢 Publishing item to LIVE...');
+        await client.collections.items.publishItem(collectionId, {
+          itemIds: [response.id]
+        });
+        console.log('✅ Timeline item published successfully (now LIVE)');
+      } catch (publishError: any) {
         console.error('⚠️ Error publishing timeline item:', publishError);
-        // Continue anyway - item is created even if publish fails
+        console.error('   Error message:', publishError.message);
+        // Continue - item is created even if publish fails
       }
     }
 
-    // Redirect back to timeline page with cache-busting timestamp
-    const timestamp = Date.now();
-    const redirectUrl = `https://patricia-lanning.webflow.io/timeline?success=true&id=${nextEventNumber}&editCode=${editCode}&t=${timestamp}`;
-    
-    console.log('🔄 Redirecting to:', redirectUrl);
     console.log('============================================');
     console.log('✅ Timeline Submission Complete');
     console.log('============================================\n');
     
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': redirectUrl
+    // Return JSON response - let Webflow form handle redirect
+    return new Response(JSON.stringify({
+      success: true,
+      data: {
+        id: response.id,
+        slug: response.fieldData?.slug,
+        eventNumber: nextEventNumber,
+        editCode: editCode,
+        hasImages: {
+          photo1: !!uploadedImages[0],
+          photo2: !!uploadedImages[1]
+        }
       }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error: any) {
@@ -312,15 +408,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
     console.error('Error Stack:', error.stack);
     console.error('============================================\n');
     
-    // Redirect to timeline page with error and cache-busting timestamp
-    const timestamp = Date.now();
-    const redirectUrl = `https://patricia-lanning.webflow.io/timeline?error=true&message=${encodeURIComponent(error.message || 'Unknown error')}&t=${timestamp}`;
-    
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': redirectUrl
-      }
+    // Return JSON error - let Webflow form handle it
+    return new Response(JSON.stringify({
+      success: false,
+      error: error.message || 'Unknown error',
+      details: error.stack
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
     });
   }
 };

@@ -105,23 +105,26 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         locals?.runtime?.env?.R2_PUBLIC_URL ||
                         `https://${locals?.runtime?.env?.CLOUDFLARE_ACCOUNT_ID || 'pub'}.r2.dev`;
     
-    const publicUrl = `${publicDomain}/${fileKey}`;
+    const url = `${publicDomain}/${fileKey}`;
 
     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
     console.log('✅ Image uploaded successfully:', {
       fileKey,
       size: `${fileSizeMB} MB`,
       type: file.type,
-      publicUrl
+      url
     });
 
     return new Response(JSON.stringify({
       success: true,
-      fileKey,
-      publicUrl,
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type
+      data: {
+        url,
+        fileKey,
+        alt: file.name,
+        filename: file.name,
+        fileSize: file.size,
+        mimeType: file.type
+      }
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
