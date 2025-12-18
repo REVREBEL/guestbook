@@ -29,6 +29,7 @@ export function GuestbookFilterTag(
     return visibility ? <_Component
         className={`tag ${_activeStyleVariant}`}
         tag="div"
+        fs-list-field="relationship"
         id={id}
         {...runtimeProps}>{tagSlot ?? text}</_Component> : null;
 }

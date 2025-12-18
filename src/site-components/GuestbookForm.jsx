@@ -1,6 +1,11 @@
 "use client";
 import React from "react";
 import * as _Builtin from "./_Builtin";
+import * as _interactions from "./interactions";
+
+const _interactionsData = JSON.parse(
+    '{"events":{"e-291":{"id":"e-291","name":"","animationType":"custom","eventTypeId":"MOUSE_OVER","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-80","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-292"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".close-button","originalId":"195647e0-c64d-d0db-a38a-918ff8d0c0e4","appliesTo":"CLASS"},"targets":[{"selector":".close-button","originalId":"195647e0-c64d-d0db-a38a-918ff8d0c0e4","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1766032238750},"e-292":{"id":"e-292","name":"","animationType":"custom","eventTypeId":"MOUSE_OUT","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-81","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-291"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".close-button","originalId":"195647e0-c64d-d0db-a38a-918ff8d0c0e4","appliesTo":"CLASS"},"targets":[{"selector":".close-button","originalId":"195647e0-c64d-d0db-a38a-918ff8d0c0e4","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1766032238752}},"actionLists":{"a-80":{"id":"a-80","title":"Inverse [ON-HOVER]","actionItemGroups":[{"actionItems":[{"id":"a-80-n","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":"CHILDREN","selector":".on-click-open","selectorGuids":["f8682163-9c88-80e9-0919-4fd75635f366"]},"value":1,"unit":""}},{"id":"a-80-n-2","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":"CHILDREN","selector":".on-click_close","selectorGuids":["bed93150-a184-89f6-0e07-d587e4dd055c"]},"value":0,"unit":""}}]}],"useFirstGroupAsInitialState":false,"createdOn":1766032244301},"a-81":{"id":"a-81","title":"New Timed Animation","actionItemGroups":[{"actionItems":[{"id":"a-81-n","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":"CHILDREN","selector":".on-click_close","selectorGuids":["bed93150-a184-89f6-0e07-d587e4dd055c"]},"value":1,"unit":""}},{"id":"a-81-n-2","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":"CHILDREN","selector":".on-click-open","selectorGuids":["f8682163-9c88-80e9-0919-4fd75635f366"]},"value":0,"unit":""}}]}],"useFirstGroupAsInitialState":false,"createdOn":1766032344989}},"site":{"mediaQueries":[{"key":"main","min":992,"max":10000},{"key":"medium","min":768,"max":991},{"key":"small","min":480,"max":767},{"key":"tiny","min":0,"max":479}]}}'
+);
 
 export function GuestbookForm(
     {
@@ -69,23 +74,27 @@ export function GuestbookForm(
         relationshipFieldSelectDropdownSlot
     }
 ) {
+    _interactions.useInteractions(_interactionsData);
+
     return componentVisibility ? <_Component
         className="component_section-guestbook-form"
         tag="section"
         id={componentId}><_Builtin.Block className="guestbook_form-padding" tag="div"><_Builtin.Block className="guestbook_inner-form-container" tag="div"><_Builtin.Block className="guestbook_component" tag="div"><_Builtin.Block
                         className="guestbook_form-card"
                         id="w-node-_3065a81f-17d8-4664-b498-e76322a00682-22a0067e"
-                        tag="div"><_Builtin.Block className="form-headline_wrapper" tag="div"><_Builtin.Heading className="heading_h3" tag="h1">{"sign the guestbook"}</_Builtin.Heading><_Builtin.HtmlEmbed
-                                className="icon-close on-click_close-wrapper"
+                        tag="div"><_Builtin.Block className="form-headline_wrapper is-guestbook" tag="div"><_Builtin.Heading className="heading_h3" tag="h1">{"sign the guestbook"}</_Builtin.Heading><_Builtin.HtmlEmbed
+                                className="on-click_close on-click_close-wrapper"
                                 value="%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2234px%22%20height%3D%2234px%22%20stroke-width%3D%221.5%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22%23currentColor%22%3E%3Cpath%20d%3D%22M9.87871%2014.1213L12%2012M14.1213%209.87868L12%2012M12%2012L9.87871%209.87868M12%2012L14.1213%2014.1213%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203.6V20.4C21%2020.7314%2020.7314%2021%2020.4%2021H3.6C3.26863%2021%203%2020.7314%203%2020.4V3.6C3%203.26863%203.26863%203%203.6%203H20.4C20.7314%203%2021%203.26863%2021%203.6Z%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E" /></_Builtin.Block><_Builtin.FormWrapper className="form_component" {...formComponentRuntimeProps}><_Builtin.FormForm
-                                className="form_form"
+                                className="guestbook_form"
                                 name="wf-form-Guestbook-Form"
                                 data-name="Guestbook Form"
-                                redirect="/guestbook"
-                                data-redirect="/guestbook"
+                                redirect="#"
+                                data-redirect="#"
                                 action="/guestbook-form/api/guestbook/submit"
                                 method="post"
-                                id="wf-form-Guestbook-Form">{fullNameFormInputVisibility ? <_Builtin.Block className="form_field-wrapper" tag="div"><_Builtin.FormBlockLabel className="input_label" htmlFor="Phone">{fullNameFormInputLabel}</_Builtin.FormBlockLabel><_Builtin.Block className="form-field_icon-component" tag="div"><_Builtin.FormTextInput
+                                id="wf-form-Guestbook-Form">{fullNameFormInputVisibility ? <_Builtin.Block className="form_field-wrapper" tag="div"><_Builtin.FormBlockLabel className="input_label" htmlFor="Phone">{fullNameFormInputLabel}</_Builtin.FormBlockLabel><_Builtin.Block className="form-field_icon-component" tag="div">{fullNameFormIconVisibility ? <_Builtin.HtmlEmbed
+                                            className="form-field_icon is-adjusted"
+                                            value="%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20stroke-width%3D%221.5%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22%20currentColor%22%3E%3Cpath%20d%3D%22M7%2018V17C7%2014.2386%209.23858%2012%2012%2012V12C14.7614%2012%2017%2014.2386%2017%2017V18%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M12%2012C13.6569%2012%2015%2010.6569%2015%209C15%207.34315%2013.6569%206%2012%206C10.3431%206%209%207.34315%209%209C9%2010.6569%2010.3431%2012%2012%2012Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203.6V20.4C21%2020.7314%2020.7314%2021%2020.4%2021H3.6C3.26863%2021%203%2020.7314%203%2020.4V3.6C3%203.26863%203.26863%203%203.6%203H20.4C20.7314%203%2021%203.26863%2021%203.6Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E" /> : null}<_Builtin.FormTextInput
                                             className="input_field is-icon"
                                             name="full_name"
                                             maxLength={256}
@@ -95,9 +104,7 @@ export function GuestbookForm(
                                             type="text"
                                             required={true}
                                             autoFocus={false}
-                                            id={fullNameFormInputId} />{fullNameFormIconVisibility ? <_Builtin.HtmlEmbed
-                                            className="form-field_icon"
-                                            value="%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20stroke-width%3D%221.5%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22%20currentColor%22%3E%3Cpath%20d%3D%22M7%2018V17C7%2014.2386%209.23858%2012%2012%2012V12C14.7614%2012%2017%2014.2386%2017%2017V18%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M12%2012C13.6569%2012%2015%2010.6569%2015%209C15%207.34315%2013.6569%206%2012%206C10.3431%206%209%207.34315%209%209C9%2010.6569%2010.3431%2012%2012%2012Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203.6V20.4C21%2020.7314%2020.7314%2021%2020.4%2021H3.6C3.26863%2021%203%2020.7314%203%2020.4V3.6C3%203.26863%203.26863%203%203.6%203H20.4C20.7314%203%2021%203.26863%2021%203.6Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E" /> : null}</_Builtin.Block></_Builtin.Block> : null}<_Builtin.Block className="guesbook_form-input-group" tag="div">{locationFieldFormInputVisibility ? <_Builtin.Block className="form_field-wrapper" tag="div"><_Builtin.FormBlockLabel className="input_label" htmlFor="Phone"><_Builtin.Strong className="input_label">{"Location *"}</_Builtin.Strong></_Builtin.FormBlockLabel><_Builtin.Block className="form-field_icon-component" tag="div"><_Builtin.FormTextInput
+                                            id={fullNameFormInputId} /></_Builtin.Block></_Builtin.Block> : null}<_Builtin.Block className="guesbook_form-input-group" tag="div">{locationFieldFormInputVisibility ? <_Builtin.Block className="form_field-wrapper" tag="div"><_Builtin.FormBlockLabel className="input_label" htmlFor="Phone"><_Builtin.Strong className="input_label">{"Location *"}</_Builtin.Strong></_Builtin.FormBlockLabel><_Builtin.Block className="form-field_icon-component" tag="div"><_Builtin.FormTextInput
                                                 className="input_field is-icon"
                                                 name="guestbook_location"
                                                 maxLength={256}
@@ -141,7 +148,7 @@ export function GuestbookForm(
                                         tag="div"
                                         id={relationshipFieldFormInputId}><_Builtin.FormBlockLabel className="input_label" htmlFor="Phone">{"Your RElationship to her"}</_Builtin.FormBlockLabel><_Builtin.Block
                                             className="input_field"
-                                            id="w-node-_5b25a104-6c9e-8529-2cbe-5cf0b93a5254-22a0067e"
+                                            id="w-node-_5fb1e1ab-8953-47dd-284a-5706976d50e8-22a0067e"
                                             tag="div"><_Builtin.FormSelect
                                                 className="select-input_field"
                                                 name="Select-Field"
@@ -181,27 +188,87 @@ export function GuestbookForm(
                                             autoFocus={false}
                                             data-auto-expand="true"
                                             id={messageFieldFormInputId}
-                                            {...messageFieldInputFieldRuntimeProps} />{messageFieldCharactersVisibility ? <_Builtin.FormBlockLabel
-                                            className="input_label margin-top_5pct"
-                                            htmlFor="Phone"
-                                            id="guestbook_characters"
-                                            {...messageFieldCharactersRuntimeProps}>{messageFieldCharactersSlot ?? messageFieldCharacterLabel}</_Builtin.FormBlockLabel> : null}</_Builtin.Block></_Builtin.Block> : null}<_Builtin.Block className="button-wrapper max-width_800px" tag="div">{buttonSubmitButtonVisibility ? <_Builtin.Block
-                                        className="button-13 is-accent-tertiary hero_button"
+                                            {...messageFieldInputFieldRuntimeProps} /></_Builtin.Block></_Builtin.Block> : null}<_Builtin.Block className="guesbook_form-input-group" tag="div">{relationshipFieldFormFieldVisibility ? <_Builtin.Block
+                                        className="form_field-wrapper"
                                         tag="div"
-                                        id={buttonSubmitButtonId}><_Builtin.FormButton
-                                            className="button_label"
-                                            type="submit"
-                                            value="Sign the Guestbook"
-                                            data-wait={buttonLoadingMessage} /></_Builtin.Block> : null}<_Builtin.FormTextInput
-                                        className="input_field is-hidden"
-                                        name="collection_id"
-                                        maxLength={256}
-                                        data-name="collection_id"
-                                        placeholder="Guestbook CMS Collection ID"
-                                        disabled={false}
-                                        type="text"
-                                        required={false}
-                                        autoFocus={false}
-                                        data-var-guestbook-collection-id={guestbookCollectionIdCollectionIdVariable}
-                                        id={guestbookCollectionIdFormInputId} /></_Builtin.Block></_Builtin.FormForm><_Builtin.FormSuccessMessage className="form_message-success"><_Builtin.Block tag="div">{userMessagesSuccessMessageText}</_Builtin.Block></_Builtin.FormSuccessMessage><_Builtin.FormErrorMessage className="form_message-error"><_Builtin.Block tag="div">{userMessagesErrorMessageText}</_Builtin.Block></_Builtin.FormErrorMessage></_Builtin.FormWrapper></_Builtin.Block></_Builtin.Block></_Builtin.Block></_Builtin.Block></_Component> : null;
+                                        id={relationshipFieldFormInputId}><_Builtin.FormBlockLabel className="input_label margin-botom_5pct" htmlFor="Phone">{"Choose you card color"}</_Builtin.FormBlockLabel><_Builtin.VFlex className="flex-block-2" tag="div"><_Builtin.Block tag="div"><_Builtin.FormRadioWrapper><_Builtin.FormRadioInput
+                                                        type="radio"
+                                                        name="Guestbook-Card-Color"
+                                                        value="Warm Sandstone"
+                                                        data-name="Guestbook Card Color"
+                                                        required={true}
+                                                        id="Warm-Sandstone-2"
+                                                        form={{
+                                                            type: "radio-input",
+                                                            name: "Guestbook Card Color"
+                                                        }}
+                                                        inputType="custom"
+                                                        customClassName="w-form-formradioinput--inputType-custom" /><_Builtin.FormInlineLabel className="radio-button-label">{"Warm Sandstone"}</_Builtin.FormInlineLabel></_Builtin.FormRadioWrapper><_Builtin.FormRadioWrapper><_Builtin.FormRadioInput
+                                                        type="radio"
+                                                        name="Guestbook-Card-Color"
+                                                        value="Ocean Teal"
+                                                        data-name="Guestbook Card Color"
+                                                        required={true}
+                                                        id="Ocean-Teal-3"
+                                                        form={{
+                                                            type: "radio-input",
+                                                            name: "Guestbook Card Color"
+                                                        }}
+                                                        inputType="custom"
+                                                        customClassName="w-form-formradioinput--inputType-custom" /><_Builtin.FormInlineLabel className="radio-button-label">{"Ocean Teal"}</_Builtin.FormInlineLabel></_Builtin.FormRadioWrapper><_Builtin.FormRadioWrapper><_Builtin.FormRadioInput
+                                                        type="radio"
+                                                        name="Guestbook-Card-Color"
+                                                        value="Rustwood Red"
+                                                        data-name="Guestbook Card Color"
+                                                        required={true}
+                                                        id="Rustwood-Red-3"
+                                                        form={{
+                                                            type: "radio-input",
+                                                            name: "Guestbook Card Color"
+                                                        }}
+                                                        inputType="custom"
+                                                        customClassName="w-form-formradioinput--inputType-custom" /><_Builtin.FormInlineLabel className="radio-button-label">{"Rustwood Red"}</_Builtin.FormInlineLabel></_Builtin.FormRadioWrapper></_Builtin.Block><_Builtin.Block tag="div"><_Builtin.FormRadioWrapper><_Builtin.FormRadioInput
+                                                        type="radio"
+                                                        name="Guestbook-Card-Color"
+                                                        value="Slate Blue"
+                                                        data-name="Guestbook Card Color"
+                                                        required={true}
+                                                        id="Slate-Blue"
+                                                        form={{
+                                                            type: "radio-input",
+                                                            name: "Guestbook Card Color"
+                                                        }}
+                                                        inputType="custom"
+                                                        customClassName="w-form-formradioinput--inputType-custom" /><_Builtin.FormInlineLabel className="radio-button-label">{"Slate Blue"}</_Builtin.FormInlineLabel></_Builtin.FormRadioWrapper><_Builtin.FormRadioWrapper><_Builtin.FormRadioInput
+                                                        type="radio"
+                                                        name="Guestbook-Card-Color"
+                                                        value="Twilight Smoke"
+                                                        data-name="Guestbook Card Color"
+                                                        required={true}
+                                                        id="Twilight-Smoke"
+                                                        form={{
+                                                            type: "radio-input",
+                                                            name: "Guestbook Card Color"
+                                                        }}
+                                                        inputType="custom"
+                                                        customClassName="w-form-formradioinput--inputType-custom" /><_Builtin.FormInlineLabel className="radio-button-label">{"Twilight Smoke"}</_Builtin.FormInlineLabel></_Builtin.FormRadioWrapper><_Builtin.FormRadioWrapper><_Builtin.FormRadioInput
+                                                        type="radio"
+                                                        name="Guestbook-Card-Color"
+                                                        value="Rose Clay"
+                                                        data-name="Guestbook Card Color"
+                                                        required={true}
+                                                        id="Rose-Clay"
+                                                        form={{
+                                                            type: "radio-input",
+                                                            name: "Guestbook Card Color"
+                                                        }}
+                                                        inputType="custom"
+                                                        customClassName="w-form-formradioinput--inputType-custom" /><_Builtin.FormInlineLabel className="radio-button-label">{"Rose Clay"}</_Builtin.FormInlineLabel></_Builtin.FormRadioWrapper></_Builtin.Block></_Builtin.VFlex></_Builtin.Block> : null}<_Builtin.Block className="form_field-wrapper margin-left_none" tag="div"><_Builtin.Block className="button-wrapper max-width_800px" tag="div">{buttonSubmitButtonVisibility ? <_Builtin.Block
+                                                className="button-13 is-accent-tertiary hero_button"
+                                                tag="div"
+                                                id={buttonSubmitButtonId}><_Builtin.FormButton
+                                                    className="button_label"
+                                                    type="submit"
+                                                    value="Sign the Guestbook"
+                                                    data-wait={buttonLoadingMessage} /></_Builtin.Block> : null}</_Builtin.Block></_Builtin.Block></_Builtin.Block></_Builtin.FormForm><_Builtin.FormSuccessMessage className="form_message-success"><_Builtin.Block tag="div">{userMessagesSuccessMessageText}</_Builtin.Block></_Builtin.FormSuccessMessage><_Builtin.FormErrorMessage className="form_message-error"><_Builtin.Block tag="div">{userMessagesErrorMessageText}</_Builtin.Block></_Builtin.FormErrorMessage></_Builtin.FormWrapper></_Builtin.Block></_Builtin.Block></_Builtin.Block></_Builtin.Block></_Component> : null;
 }

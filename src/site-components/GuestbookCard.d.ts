@@ -6,12 +6,10 @@ declare function GuestbookCard(
         as?: React.ElementType;
         mainComponentId?: Types.Basic.IdTextInput;
         mainComponentVisibility?: Types.Visibility.VisibilityConditions;
-        mainComponentColorVariant?: "Warm Sandston" | "Slate Navy" | "Slate Blue" | "Ocean Teal" | "Rustwood Red" | "Rose Clay";
+        mainComponentColorVariant?: "Warm Sandston" | "Slate Blue" | "Slate Navy" | "Ocean Teal" | "Rustwood Red" | "Rose Clay";
         guestbookDateId?: Types.Basic.IdTextInput;
         guestbookDateRuntimeProps?: Types.Devlink.RuntimeProps;
         guestbookDateDateLabel?: React.ReactNode;
-        /** MMMM / YYYY*/
-        guestbookDateGuestbookDate?: React.ReactNode;
         nameFullName?: React.ReactNode;
         locationVisibility?: Types.Visibility.VisibilityConditions;
         locationIconVisibility?: Types.Visibility.VisibilityConditions;
@@ -22,9 +20,6 @@ declare function GuestbookCard(
         viewMessageButtonButtonText?: React.ReactNode;
         viewMessageButtonSlot?: Types.Devlink.Slot;
         viewMessageButtonRuntimeProps?: Types.Devlink.RuntimeProps;
-        tag1Visibility?: Types.Visibility.VisibilityConditions;
-        tag1Id?: Types.Basic.IdTextInput;
-        tag1Text?: React.ReactNode;
         tag2Visibility?: Types.Visibility.VisibilityConditions;
         tag2Id?: Types.Basic.IdTextInput;
         tag2Text?: React.ReactNode;
@@ -37,7 +32,6 @@ declare function GuestbookCard(
         howWeMetHowWeMetSlot?: Types.Devlink.Slot;
         howWeMetRuntimeProps?: Types.Devlink.RuntimeProps;
         messageVisibility?: Types.Visibility.VisibilityConditions;
-        messageMessageHeading?: React.ReactNode;
         messageMessageText?: React.ReactNode;
         messageMessageSlot?: Types.Devlink.Slot;
         messageRuntimeProps?: Types.Devlink.RuntimeProps;
@@ -45,9 +39,8 @@ declare function GuestbookCard(
         cardDetailsButtonCardDetailButtonSlot?: Types.Devlink.Slot;
         cardDetailsButtonRuntimeProps?: Types.Devlink.RuntimeProps;
         messageHeadingText?: React.ReactNode;
-        tag1Tag1Slot?: Types.Devlink.Slot;
-        tag1RuntimeProps?: Types.Devlink.RuntimeProps;
         howWeMetVisibility?: Types.Visibility.VisibilityConditions;
         howWeMetHeadingText?: React.ReactNode;
+        guestbookDateVisibility?: Types.Visibility.VisibilityConditions;
     }
 ): React.JSX.Element
