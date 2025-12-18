@@ -85,7 +85,7 @@ export function MemoryJournalForm(
     }
 ) {
     return componentVisibility ? <_Component
-        className="component_section-guestbook-form component_section-memory-journal-form"
+        className="component_section-guestbook-form on-click_form"
         tag="section"
         id={componentId}><_Builtin.Block className="memory-journal_form-padding" tag="div"><_Builtin.Block className="memory-journal_inner-form" tag="div"><_Builtin.Block className="memory-journal_component" tag="div"><_Builtin.Block
                         className="memory-jourrnal_form-card"

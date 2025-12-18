@@ -6,7 +6,7 @@
  * 2. Get asset IDs back
  * 3. Create CMS item with asset references
  * 4. Publish item
- * 5. Return 204 No Content
+ * 5. Redirect back to form page
  */
 
 import type { APIRoute } from 'astro';
@@ -58,7 +58,7 @@ export const GET: APIRoute = async ({ locals }) => {
   });
 };
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, url }) => {
   console.log('============================================');
   console.log('📥 Timeline Form Submission Received');
   console.log('============================================');
@@ -76,12 +76,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     
     if (!token) {
       console.error('❌ Missing API token');
-      return new Response(JSON.stringify({ 
-        success: false,
-        error: 'Missing API token' 
-      }), { 
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
+      return new Response(null, {
+        status: 303,
+        headers: {
+          Location: `${url.pathname}?error=true&message=${encodeURIComponent('Missing API token')}`
+        }
       });
     }
 
@@ -98,7 +97,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
                   import.meta.env.WEBFLOW_SITE_ID;
     
     if (!siteId) {
-      throw new Error('Missing WEBFLOW_SITE_ID environment variable');
+      console.error('❌ Missing WEBFLOW_SITE_ID');
+      return new Response(null, {
+        status: 303,
+        headers: {
+          Location: `${url.pathname}?error=true&message=${encodeURIComponent('Missing site ID')}`
+        }
+      });
     }
 
     console.log('🌐 Site ID:', siteId);
@@ -111,7 +116,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
                         import.meta.env.TIMELINE_COLLECTION_ID;
     
     if (!collectionId) {
-      throw new Error('Missing TIMELINE_COLLECTION_ID environment variable');
+      console.error('❌ Missing TIMELINE_COLLECTION_ID');
+      return new Response(null, {
+        status: 303,
+        headers: {
+          Location: `${url.pathname}?error=true&message=${encodeURIComponent('Missing collection ID')}`
+        }
+      });
     }
 
     // Extract timeline name
@@ -366,9 +377,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     console.log('   Edit Code:', editCode);
     console.log('============================================\n');
     
-    // Return 204 No Content
+    // Redirect back to the form page with success message
     return new Response(null, {
-      status: 204
+      status: 303,
+      headers: {
+        Location: `${url.pathname}?success=true&eventNumber=${nextEventNumber}`
+      }
     });
 
   } catch (error: any) {
@@ -380,12 +394,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     console.error('Error Stack:', error.stack);
     console.error('============================================\n');
     
-    return new Response(JSON.stringify({
-      success: false,
-      error: error.message || 'Unknown error'
-    }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
+    // Redirect back with error message
+    return new Response(null, {
+      status: 303,
+      headers: {
+        Location: `${url.pathname}?error=true&message=${encodeURIComponent(error.message || 'Unknown error')}`
+      }
     });
   }
 };

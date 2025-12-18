@@ -45,7 +45,8 @@ function injectDevScript(options = {}) {
 
 // https://astro.build/config
 export default defineConfig({
-  base: '',
+  // Webflow Cloud injects BASE_URL as the mount path
+  base: process.env.BASE_URL || '',
   output: 'server',
   devToolbar: {
     enabled: false,
@@ -68,6 +69,10 @@ export default defineConfig({
     // Disable CSRF origin checking for FormData submissions
     // Cloudflare Workers provides its own security layer
     checkOrigin: false,
+  },
+  build: {
+    // Webflow Cloud injects ASSETS_PREFIX for CDN assets
+    assetsPrefix: process.env.ASSETS_PREFIX,
   },
   vite: {
     plugins: [tailwindcss(), patchViteErrorOverlay()],
