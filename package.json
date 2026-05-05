@@ -16,8 +16,8 @@
     "build:timeline-embed": "node scripts/build-timeline-embed.mjs"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "12.6.7",
-    "@astrojs/react": "4.3.0",
+    "@astrojs/cloudflare": "12.6.13",
+    "@astrojs/react": "4.4.2",
     "@aws-sdk/client-s3": "3.948.0",
     "@aws-sdk/s3-request-presigner": "3.948.0",
     "@hookform/resolvers": "5.2.1",
@@ -50,7 +50,7 @@
     "@tailwindcss/vite": "4.1.11",
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
-    "astro": "5.13.5",
+    "astro": "5.18.1",
     "browser-image-compression": "2.0.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
@@ -75,7 +75,7 @@
     "zod": "4.0.13"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.4",
+    "@astrojs/check": "0.9.9",
     "@cloudflare/workers-types": "4.20250726.0",
     "kill-port": "2.0.1",
     "tw-animate-css": "1.3.6",
