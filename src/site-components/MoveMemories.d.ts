@@ -1,7 +1,2 @@
 import * as React from "react";
-
-declare function MoveMemories(
-    props: {
-        as?: React.ElementType;
-    }
-): React.JSX.Element
+declare function MoveMemories(props: {}): React.JSX.Element;

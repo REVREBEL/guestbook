@@ -1,0 +1,94 @@
+"use client";
+import React from "react";
+import { DEVLINK_SCOPE_CLASS } from "../devlinkScope";
+import Block from "../webflow_modules/Basic/components/Block";
+import Heading from "../webflow_modules/Basic/components/Heading";
+import HtmlEmbed from "../webflow_modules/Embed/components/HtmlEmbed";
+import Image from "../webflow_modules/Basic/components/Image";
+import * as _interactions from "../webflow_modules/interactions";
+import { ComponentSizeVariant } from "./ComponentSizeVariant";
+
+const _interactionsData = JSON.parse(
+  '{"events":{"e-161":{"id":"e-161","name":"","animationType":"custom","eventTypeId":"MOUSE_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-37","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-162"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".on-click_show","originalId":"6922263caf3f8676a995b64f|97fa6ebd-a714-35af-19e4-9e414fc7f178","appliesTo":"CLASS"},"targets":[{"selector":".on-click_show","originalId":"6922263caf3f8676a995b64f|97fa6ebd-a714-35af-19e4-9e414fc7f178","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764768029167},"e-162":{"id":"e-162","name":"","animationType":"custom","eventTypeId":"MOUSE_SECOND_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-38","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-161"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".on-click_show","originalId":"6922263caf3f8676a995b64f|97fa6ebd-a714-35af-19e4-9e414fc7f178","appliesTo":"CLASS"},"targets":[{"selector":".on-click_show","originalId":"6922263caf3f8676a995b64f|97fa6ebd-a714-35af-19e4-9e414fc7f178","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764768029167},"e-163":{"id":"e-163","name":"","animationType":"custom","eventTypeId":"MOUSE_OVER","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-37","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-164"}},"mediaQueries":["medium","small","tiny"],"target":{"selector":".memory-wall_days-count","originalId":"42559019-68e5-39f0-820b-942110e60485","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_days-count","originalId":"42559019-68e5-39f0-820b-942110e60485","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764768705219},"e-164":{"id":"e-164","name":"","animationType":"custom","eventTypeId":"MOUSE_OUT","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-38","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-163"}},"mediaQueries":["medium","small","tiny"],"target":{"selector":".memory-wall_days-count","originalId":"42559019-68e5-39f0-820b-942110e60485","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_days-count","originalId":"42559019-68e5-39f0-820b-942110e60485","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764768705220},"e-167":{"id":"e-167","name":"","animationType":"custom","eventTypeId":"MOUSE_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-37","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-168"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".memory-wall_move-rotate","originalId":"692f7cd9818359e904b9f167|ec37340d-8dcb-089d-d9e3-14fd58250420","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_move-rotate","originalId":"692f7cd9818359e904b9f167|ec37340d-8dcb-089d-d9e3-14fd58250420","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764772390272},"e-168":{"id":"e-168","name":"","animationType":"custom","eventTypeId":"MOUSE_SECOND_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-38","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-167"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".memory-wall_move-rotate","originalId":"692f7cd9818359e904b9f167|ec37340d-8dcb-089d-d9e3-14fd58250420","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_move-rotate","originalId":"692f7cd9818359e904b9f167|ec37340d-8dcb-089d-d9e3-14fd58250420","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764772390273},"e-211":{"id":"e-211","name":"","animationType":"preset","eventTypeId":"MOUSE_OVER","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-53","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-212"}},"mediaQueries":["medium","small","tiny"],"target":{"selector":".memory-wall_days-count","originalId":"6930921aaa3df371b6c0a733|5f0970dd-9635-c226-22e9-d11f7f95d4df","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_days-count","originalId":"6930921aaa3df371b6c0a733|5f0970dd-9635-c226-22e9-d11f7f95d4df","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764802385538},"e-212":{"id":"e-212","name":"","animationType":"preset","eventTypeId":"MOUSE_OUT","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-54","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-211"}},"mediaQueries":["medium","small","tiny"],"target":{"selector":".memory-wall_days-count","originalId":"6930921aaa3df371b6c0a733|5f0970dd-9635-c226-22e9-d11f7f95d4df","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_days-count","originalId":"6930921aaa3df371b6c0a733|5f0970dd-9635-c226-22e9-d11f7f95d4df","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764802385538},"e-227":{"id":"e-227","name":"","animationType":"preset","eventTypeId":"MOUSE_OVER","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-37","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-232"}},"mediaQueries":["medium","small","tiny"],"target":{"selector":".memory-wall_days-count","originalId":"5dfec0d9-8b9b-bb30-cc8e-6ceb358f312a","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_days-count","originalId":"5dfec0d9-8b9b-bb30-cc8e-6ceb358f312a","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764785782879},"e-232":{"id":"e-232","name":"","animationType":"preset","eventTypeId":"MOUSE_OUT","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-38","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-227"}},"mediaQueries":["medium","small","tiny"],"target":{"selector":".memory-wall_days-count","originalId":"5dfec0d9-8b9b-bb30-cc8e-6ceb358f312a","appliesTo":"CLASS"},"targets":[{"selector":".memory-wall_days-count","originalId":"5dfec0d9-8b9b-bb30-cc8e-6ceb358f312a","appliesTo":"CLASS"}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1764785782879},"e-333":{"id":"e-333","name":"","animationType":"custom","eventTypeId":"MOUSE_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-87","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-334"}},"mediaQueries":["main","medium","small","tiny"],"target":{"id":"693afb7702b6d3e91216c00a|a7c89a8e-ed2b-1333-0d5e-dc8a17b37ca6","appliesTo":"ELEMENT","styleBlockIds":[]},"targets":[{"id":"693afb7702b6d3e91216c00a|a7c89a8e-ed2b-1333-0d5e-dc8a17b37ca6","appliesTo":"ELEMENT","styleBlockIds":[]}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1766999832831},"e-334":{"id":"e-334","name":"","animationType":"custom","eventTypeId":"MOUSE_SECOND_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-88","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-333"}},"mediaQueries":["main","medium","small","tiny"],"target":{"id":"693afb7702b6d3e91216c00a|a7c89a8e-ed2b-1333-0d5e-dc8a17b37ca6","appliesTo":"ELEMENT","styleBlockIds":[]},"targets":[{"id":"693afb7702b6d3e91216c00a|a7c89a8e-ed2b-1333-0d5e-dc8a17b37ca6","appliesTo":"ELEMENT","styleBlockIds":[]}],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1766999832832}},"actionLists":{"a-37":{"id":"a-37","title":"Show Message [ON_CLICK]","actionItemGroups":[{"actionItems":[{"id":"a-37-n","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeIn","duration":500,"target":{"useEventTarget":"SIBLINGS","selector":".guestbook_message-card","selectorGuids":["c2644b77-efda-82dc-2158-d0a0f3cb02fa"]},"value":1,"unit":""}}]}],"useFirstGroupAsInitialState":false,"createdOn":1764768046901},"a-38":{"id":"a-38","title":"Show Message [OFF CLICK]","actionItemGroups":[{"actionItems":[{"id":"a-38-n-4","actionTypeId":"STYLE_BACKGROUND_COLOR","config":{"delay":0,"easing":"easeOut","duration":1500,"target":{"selector":".memory-wall_botom-content","selectorGuids":["f302f035-1b12-87ab-fa79-ab1aa4fa0949"]},"globalSwatchId":"","rValue":0,"bValue":0,"gValue":0,"aValue":0}},{"id":"a-38-n-3","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeOut","duration":1500,"target":{"useEventTarget":"CHILDREN","selector":".memory-wall_bottom-paragraph","selectorGuids":["1881fdc8-69bb-9b99-b797-06a4260f0d8e"]},"value":0,"unit":""}},{"id":"a-38-n-6","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeIn","duration":1500,"target":{"useEventTarget":"CHILDREN","selector":".memory-wall_heading-wrapper","selectorGuids":["a11dfe58-9e14-7a84-d511-8b6e5593c092"]},"value":1,"unit":""}},{"id":"a-38-n-7","actionTypeId":"TRANSFORM_MOVE","config":{"delay":0,"easing":"","duration":1000,"target":{"selector":".guestbook_month-year","selectorGuids":["1f9cb317-b6af-0acc-34ef-7423da8921cf"]},"xValue":-35,"yValue":130,"xUnit":"px","yUnit":"px","zUnit":"PX"}}]},{"actionItems":[{"id":"a-38-n-8","actionTypeId":"TRANSFORM_ROTATE","config":{"delay":0,"easing":"","duration":1500,"target":{"selector":".guestbook_month-year","selectorGuids":["1f9cb317-b6af-0acc-34ef-7423da8921cf"]},"zValue":-90,"xUnit":"DEG","yUnit":"DEG","zUnit":"deg"}}]}],"useFirstGroupAsInitialState":false,"createdOn":1764768046901},"a-53":{"id":"a-53","title":"Show Message [ON_CLICK]","actionItemGroups":[{"actionItems":[{"id":"a-53-n-4","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":1000,"target":{"useEventTarget":"CHILDREN","selector":".guestbook_message-wrapper","selectorGuids":["cd68b341-d8d2-6f1f-a8dc-73b76df0959b"]},"value":0,"unit":""}},{"id":"a-53-n","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeOut","duration":1500,"target":{"useEventTarget":true,"id":"3689d08e-4566-5cce-acd7-70fe0543160f"},"value":0,"unit":""}},{"id":"a-53-n-5","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":1000,"target":{"useEventTarget":"CHILDREN","selector":".guesttbook_button-view-detail","selectorGuids":["6eb2702d-f4ab-1073-047b-4e42e6a6798c"]},"value":0,"unit":""}}]},{"actionItems":[{"id":"a-53-n-2","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeIn","duration":500,"target":{"useEventTarget":true,"id":"3689d08e-4566-5cce-acd7-70fe0543160f"},"value":1,"unit":""}},{"id":"a-53-n-3","actionTypeId":"STYLE_OPACITY","config":{"delay":500,"easing":"","duration":1000,"target":{"useEventTarget":"CHILDREN","selector":".guestbook_message-wrapper","selectorGuids":["cd68b341-d8d2-6f1f-a8dc-73b76df0959b"]},"value":1,"unit":""}},{"id":"a-53-n-6","actionTypeId":"STYLE_OPACITY","config":{"delay":750,"easing":"","duration":1000,"target":{"useEventTarget":"CHILDREN","selector":".guesttbook_button-view-detail","selectorGuids":["6eb2702d-f4ab-1073-047b-4e42e6a6798c"]},"value":0,"unit":""}}]}],"useFirstGroupAsInitialState":true,"createdOn":1764768046901},"a-54":{"id":"a-54","title":"Show Message [OFF CLICK]","actionItemGroups":[{"actionItems":[{"id":"a-54-n-4","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":true,"id":"3689d08e-4566-5cce-acd7-70fe0543160f"},"value":0,"unit":""}}]}],"useFirstGroupAsInitialState":false,"createdOn":1764768046901},"a-87":{"id":"a-87","title":"Show Memory [ON_CLICK]","actionItemGroups":[{"actionItems":[{"id":"a-87-n","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeIn","duration":500,"target":{"useEventTarget":"PARENT","selector":".memory-wall_botom-content.component-card-color","selectorGuids":["f302f035-1b12-87ab-fa79-ab1aa4fa0949","dbbdde5d-6151-60a1-eb4b-243c3f596461"]},"value":1,"unit":""}}]}],"useFirstGroupAsInitialState":false,"createdOn":1764768046901},"a-88":{"id":"a-88","title":"Show Memory [OFF CLICK]","actionItemGroups":[{"actionItems":[{"id":"a-88-n","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"easeOut","duration":500,"target":{"useEventTarget":"PARENT","selector":".memory-wall_botom-content.component-card-color","selectorGuids":["f302f035-1b12-87ab-fa79-ab1aa4fa0949","dbbdde5d-6151-60a1-eb4b-243c3f596461"]},"value":0,"unit":""}}]}],"useFirstGroupAsInitialState":false,"createdOn":1764768046901}},"site":{"mediaQueries":[{"key":"main","min":992,"max":10000},{"key":"medium","min":768,"max":991},{"key":"small","min":480,"max":767},{"key":"tiny","min":0,"max":479}]}}'
+);
+
+export function CardSizeVariant({
+  detailMemoryDetail = "Patricia went on to complete cosmetology training at Boulder High School. This early chapter of her life reflected her creative spirit and her love of helping others feel their best, leading her to become a licensed beautician in Colorado.",
+  imageAltText = "__wf_reserved_inherit",
+  imageImage = "https://cdn.prod.website-files.com/69219eaa23d0fd8b7effe1fe/69297c6ba716fc21cbfb0b96_IMG_1549-Edit.avif",
+  imageVisibility = false,
+  memoryCard1X1PreviewMemoryHeadline = "Becoming a Licensed Beautician",
+  memoryHeadlineTag = "h1",
+  metaLikeIconVisibility = true,
+  metaMemoryData = <br />,
+  metaPostedByName = "Posted by: Gary Stringham",
+  variant = "1x1",
+}) {
+  _interactions.useInteractions(_interactionsData);
+
+  const _styleVariantMap = {
+    "1x1": "",
+    "2x3": "w-variant-6d479e5a-8a66-5802-f742-21c18f65522a",
+    "3x2": "w-variant-9a24517b-7126-0ebb-a1fa-a96a88b41671",
+  };
+
+  const _activeStyleVariant = _styleVariantMap[variant];
+
+  return (
+    <div
+      className={DEVLINK_SCOPE_CLASS}
+      style={{
+        display: "contents",
+      }}
+    >
+      <Block
+        className={`component-size-variant ${_activeStyleVariant}`}
+        tag={"div"}
+      >
+        <ComponentSizeVariant />
+        <Block
+          className={`memory-wall_top-content ${_activeStyleVariant}`}
+          tag={"div"}
+        >
+          <Block className={`div-block-47 ${_activeStyleVariant}`} tag={"div"}>
+            <Block
+              className={`memory-wall_top-date date-tag ${_activeStyleVariant}`}
+              tag={"div"}
+            >
+              {metaMemoryData}
+            </Block>
+            <Heading
+              className={`memory-wall_card-heading ${_activeStyleVariant}`}
+              tag={memoryHeadlineTag}
+            >
+              {memoryCard1X1PreviewMemoryHeadline}
+            </Heading>
+            <Block
+              className={`memory-wall_days-count ${_activeStyleVariant}`}
+              tag={"div"}
+            >
+              {metaPostedByName}
+            </Block>
+          </Block>
+        </Block>
+        {imageVisibility ? (
+          <Image
+            alt={""}
+            className={`memory-wall_image colorize_on-hover ${_activeStyleVariant}`}
+            height={"auto"}
+            loading={"lazy"}
+            src={imageImage}
+            width={"auto"}
+          />
+        ) : null}
+        <Block className={`color-card ${_activeStyleVariant}`} tag={"div"} />
+        {imageVisibility ? (
+          <Block
+            className={`memory-wall_image-overlay ${_activeStyleVariant}`}
+            tag={"div"}
+          />
+        ) : null}
+      </Block>
+    </div>
+  );
+}

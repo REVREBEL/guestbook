@@ -2,12 +2,17 @@
  * Memory Journal Form Submission Endpoint
  * 
  * Complete Webflow Assets + CMS Workflow:
- * 1. Upload images to Webflow Assets API (profile-image, photo)
+ * 1. Upload images to Webflow Assets API
  * 2. Detect photo orientation and assign card size
  * 3. Get asset IDs back
  * 4. Create CMS item with asset references
  * 5. Publish item
  * 6. Redirect back to form page
+ * 
+ * Field Mapping:
+ * - fileToUpload1 → photo (main memory photo with orientation detection)
+ * - fileToUpload2 → video (secondary media)
+ * - profile-image → reserved for future social login
  */
 
 import type { APIRoute } from 'astro';
@@ -339,21 +344,30 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
 
     // ==== UPLOAD IMAGES TO WEBFLOW ASSETS API ====
     console.log('\n🎨 Starting Webflow Asset Upload Process...');
+    console.log('📋 Field Mapping:');
+    console.log('   fileToUpload1 → photo (main memory photo with orientation detection)');
+    console.log('   fileToUpload2 → video (secondary media)');
     
     const uploadedAssets: Array<{ fileId: string; url: string; alt?: string } | null> = [null, null];
-    const fileFields = [
-      { form: 'profile_image', label: 'Profile Image' },
-      { form: 'photo', label: 'Memory Photo' }
-    ];
+    const fileFields = ['fileToUpload1', 'fileToUpload2'];
     
     let detectedOrientation = '1x1'; // Default
     
     for (let i = 0; i < fileFields.length; i++) {
-      const fieldName = fileFields[i].form;
+      const fieldName = fileFields[i];
       const file = formData.get(fieldName);
       
+      // Debug: Log what we got from formData
+      console.log(`\n🔍 Checking ${fieldName}:`, {
+        exists: file !== null,
+        type: file?.constructor?.name,
+        isFile: file instanceof File,
+        size: file instanceof File ? file.size : 'N/A',
+        value: file instanceof File ? `File: ${file.name}` : String(file)
+      });
+      
       if (file && file instanceof File && file.size > 0) {
-        console.log(`\n📤 Processing ${fileFields[i].label}:`, {
+        console.log(`📤 Processing ${fieldName}:`, {
           name: file.name,
           size: file.size,
           type: file.type
@@ -367,8 +381,8 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
           
           console.log(`   🔒 MD5 Hash: ${hash}`);
           
-          // Detect orientation for the main photo (index 1)
-          if (i === 1) {
+          // Detect orientation for the main photo (fileToUpload1 = index 0)
+          if (i === 0) {
             detectedOrientation = await detectImageOrientation(buffer);
           }
           
@@ -443,20 +457,20 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
           };
           
         } catch (uploadError: any) {
-          console.error(`❌ Failed to upload ${fileFields[i].label}:`, uploadError);
+          console.error(`❌ Failed to upload ${fieldName}:`, uploadError);
           console.error('   Error:', uploadError.message);
           if (uploadError.stack) {
             console.error('   Stack:', uploadError.stack);
           }
         }
       } else {
-        console.log(`\n⏭️  Skipping ${fileFields[i].label} (no file provided)`);
+        console.log(`⏭️  Skipping ${fieldName} (no valid file)`);
       }
     }
 
     console.log('\n🖼️ Final Asset Results:', {
-      profileImage: uploadedAssets[0] ? `${uploadedAssets[0].fileId}` : 'none',
-      photo: uploadedAssets[1] ? `${uploadedAssets[1].fileId}` : 'none',
+      photo: uploadedAssets[0] ? `${uploadedAssets[0].fileId}` : 'none',
+      video: uploadedAssets[1] ? `${uploadedAssets[1].fileId}` : 'none',
       orientation: detectedOrientation
     });
 
@@ -481,15 +495,6 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
       'last-name': lastName,
       'email': formData.get('email') as string || '',
       
-      // Profile image using Webflow Asset reference
-      ...(uploadedAssets[0] && {
-        'profile-image': {
-          fileId: uploadedAssets[0].fileId,
-          url: uploadedAssets[0].url,
-          alt: uploadedAssets[0].alt || 'Profile image'
-        }
-      }),
-      
       // Memory details
       'memory-detail': memoryDetail,
       'memory-date': memoryDate,
@@ -500,18 +505,26 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
       'memory-tag-2': tag2,
       'memory-tag-3': tag3,
       
-      // Main photo using Webflow Asset reference
-      ...(uploadedAssets[1] && {
+      // Main photo using Webflow Asset reference (fileToUpload1 → photo)
+      ...(uploadedAssets[0] && {
         'photo': {
-          fileId: uploadedAssets[1].fileId,
-          url: uploadedAssets[1].url,
-          alt: uploadedAssets[1].alt || 'Memory photo'
+          fileId: uploadedAssets[0].fileId,
+          url: uploadedAssets[0].url,
+          alt: uploadedAssets[0].alt || 'Memory photo'
         }
       }),
-      'photo-added': !!uploadedAssets[1],
+      'photo-added': !!uploadedAssets[0],
       
-      // Video and link (optional)
-      'video': formData.get('video') as string || '',
+      // Secondary media using Webflow Asset reference (fileToUpload2 → video)
+      ...(uploadedAssets[1] && {
+        'video': {
+          fileId: uploadedAssets[1].fileId,
+          url: uploadedAssets[1].url,
+          alt: uploadedAssets[1].alt || 'Memory video'
+        }
+      }),
+      
+      // Content link (text URL field, not file upload)
       'content-link': formData.get('content_link') as string || '',
       
       // Card size configuration based on photo orientation
@@ -536,8 +549,8 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
       '2x1': fieldData['2x1'],
       'css-columns': fieldData['css-columns'],
       'css-rows': fieldData['css-rows'],
-      'profile-image': fieldData['profile-image'] ? `fileId: ${fieldData['profile-image'].fileId}` : 'none',
       'photo': fieldData['photo'] ? `fileId: ${fieldData['photo'].fileId}` : 'none',
+      'video': fieldData['video'] ? `fileId: ${fieldData['video'].fileId}` : 'none',
     });
 
     console.log('\n📦 Full Field Data Object:', JSON.stringify(fieldData, null, 2));

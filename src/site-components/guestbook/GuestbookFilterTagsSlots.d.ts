@@ -1,0 +1,32 @@
+import * as React from "react";
+import * as Types from "../webflow_modules/types";
+
+declare function GuestbookFilterTagsSlots(props: {
+  componentComponentId?: string;
+  componentComponentVisibility?: Types.Visibility.VisibilityConditions;
+  componentRuntimeProps?: Types.Devlink.RuntimeProps;
+  tag1NewestTagSlot?: Types.Devlink.Slot;
+  tag1RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag1Visibility?: Types.Visibility.VisibilityConditions;
+  tag2FamilyTagSlot?: Types.Devlink.Slot;
+  tag2RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag2Visibility?: Types.Visibility.VisibilityConditions;
+  tag3RelativeTagSlot?: Types.Devlink.Slot;
+  tag3RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag3Visibility?: Types.Visibility.VisibilityConditions;
+  tag4FriendsTagSlot?: Types.Devlink.Slot;
+  tag4RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag4Visibility?: Types.Visibility.VisibilityConditions;
+  tag5CoWorkerTagSlot?: Types.Devlink.Slot;
+  tag5RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag5Visibility?: Types.Visibility.VisibilityConditions;
+  tag6BusinessPartnerTagSlot?: Types.Devlink.Slot;
+  tag6RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag6Visibility?: Types.Visibility.VisibilityConditions;
+  tag7ChurchFriendSlot?: Types.Devlink.Slot;
+  tag7RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag7Visibility?: Types.Visibility.VisibilityConditions;
+  tag8NeverMetTagSlot?: Types.Devlink.Slot;
+  tag8RuntimeProps?: Types.Devlink.RuntimeProps;
+  tag8Visibility?: Types.Visibility.VisibilityConditions;
+}): React.JSX.Element;
