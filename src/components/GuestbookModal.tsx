@@ -84,6 +84,34 @@ export function GuestbookModal({
     }
   }, [isOpen, onClose]);
 
+  // Inject hidden collection ID input after form renders
+  useEffect(() => {
+    if (isOpen) {
+      // Wait for form to render
+      const timer = setTimeout(() => {
+        const form = document.querySelector('form[name="wf-form-Guestbook-Form"]');
+        if (form) {
+          // Remove any existing collectionId input to avoid duplicates
+          const existingInput = form.querySelector('input[name="collectionId"]');
+          if (existingInput) {
+            existingInput.remove();
+          }
+          
+          // Add hidden input with collection ID
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = 'collectionId';
+          hiddenInput.value = collectionId;
+          form.appendChild(hiddenInput);
+          
+          console.log('✅ Injected collectionId hidden input:', collectionId);
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, collectionId]);
+
   if (!isOpen) return null;
 
   const apiEndpoint = `${baseUrl}/api/guestbook/submit`;
@@ -197,4 +225,5 @@ export function GuestbookModal({
     </>
   );
 }
+
 

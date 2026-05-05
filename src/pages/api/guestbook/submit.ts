@@ -1,3 +1,4 @@
+
 /**
  * Guestbook Form Submission Endpoint
  * 
@@ -95,7 +96,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const formData = await request.formData();
     console.log('📝 Form Data Keys:', Array.from(formData.keys()));
     
-    const collectionId = formData.get('collectionId') as string || '69383a09bbf502930bf620a3';
+    const collectionId = formData.get('collectionId') as string;
+    
+    if (!collectionId) {
+      console.error('❌ Missing collection ID in form data');
+      return new Response(JSON.stringify({ 
+        success: false,
+        error: 'Collection ID is required' 
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
     console.log('📚 Collection ID:', collectionId);
     
     // Get the relationship field - could be from custom select or native select
@@ -260,3 +273,4 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 };
+
