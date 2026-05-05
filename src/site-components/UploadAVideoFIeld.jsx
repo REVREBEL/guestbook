@@ -1,6 +1,11 @@
 "use client";
 import React from "react";
 import * as _Builtin from "./_Builtin";
+import * as _interactions from "./interactions";
+
+const _interactionsData = JSON.parse(
+    '{"events":{"e-297":{"id":"e-297","name":"","animationType":"custom","eventTypeId":"MOUSE_CLICK","action":{"id":"","actionTypeId":"GENERAL_START_ACTION","config":{"delay":0,"easing":"","duration":0,"actionListId":"a-76","affectedElements":{},"playInReverse":false,"autoStopEventId":"e-298"}},"mediaQueries":["main","medium","small","tiny"],"target":{"selector":".form_input-background.is-timeline","originalId":"7eeb6230-e061-5f09-8f7c-e6b351a54431","appliesTo":"CLASS"},"targets":[],"config":{"loop":false,"playInReverse":false,"scrollOffsetValue":null,"scrollOffsetUnit":null,"delay":null,"direction":null,"effectIn":null},"createdOn":1766124540667}},"actionLists":{"a-76":{"id":"a-76","title":"UploadFile Image 1","actionItemGroups":[{"actionItems":[{"id":"a-76-n-9","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":"SIBLINGS","selector":".uploader-animation.image-1","selectorGuids":["ecb27e2e-d6f1-61cb-231b-6bef41cb0019","b82dd088-706a-a5fb-9323-949055bb2ff3"]},"value":0,"unit":""}},{"id":"a-76-n-10","actionTypeId":"STYLE_SIZE","config":{"delay":0,"easing":"","duration":500,"target":{"useEventTarget":"SIBLINGS","selector":".uploader-animation.image-1","selectorGuids":["ecb27e2e-d6f1-61cb-231b-6bef41cb0019","b82dd088-706a-a5fb-9323-949055bb2ff3"]},"heightValue":0,"widthUnit":"PX","heightUnit":"px","locked":false}}]},{"actionItems":[{"id":"a-76-n-4","actionTypeId":"STYLE_OPACITY","config":{"delay":0,"easing":"","duration":5000,"target":{"useEventTarget":"SIBLINGS","selector":".uploader-animation.image-1","selectorGuids":["ecb27e2e-d6f1-61cb-231b-6bef41cb0019","b82dd088-706a-a5fb-9323-949055bb2ff3"]},"value":0.45,"unit":""}},{"id":"a-76-n-7","actionTypeId":"STYLE_SIZE","config":{"delay":5000,"easing":"","duration":10000,"target":{"useEventTarget":"SIBLINGS","selector":".uploader-animation.image-1","selectorGuids":["ecb27e2e-d6f1-61cb-231b-6bef41cb0019","b82dd088-706a-a5fb-9323-949055bb2ff3"]},"heightValue":100,"widthUnit":"PX","heightUnit":"%","locked":false}}]}],"useFirstGroupAsInitialState":true,"createdOn":1765940061742}},"site":{"mediaQueries":[{"key":"main","min":992,"max":10000},{"key":"medium","min":768,"max":991},{"key":"small","min":480,"max":767},{"key":"tiny","min":0,"max":479}]}}'
+);
 
 export function UploadAVideoFIeld(
     {
@@ -14,6 +19,8 @@ export function UploadAVideoFIeld(
         uploadVideoFormInputLabel = "Upload a Video"
     }
 ) {
+    _interactions.useInteractions(_interactionsData);
+
     return fullNameFormFieldVisibility ? <_Component
         className="form_input-background"
         tag="div"

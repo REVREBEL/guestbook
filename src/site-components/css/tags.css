@@ -1,0 +1,141 @@
+@scope (.wf-devlink-57d61c6905dbab40e0622f33a96317d9) {
+  body {
+    background-color: var(--_colors---background-color--bg-primary);
+    background-image: none;
+    font-family: var(--_typography---font--body-font);
+    font-size: var(--_typography---base-typography--base-font-size);
+    line-height: var(--_typography---base-typography--base-line-height);
+    letter-spacing: var(--_typography---base-typography--base-letter-spacing);
+  }
+  h1 {
+    margin-top: 20px;
+    margin-bottom: var(--_typography---h1-heading--h1-margin-bottom);
+    font-family: var(--_typography---font--heading-font);
+    color: var(--_colors---text-color--text-primary);
+    font-size: var(--_typography---h1-heading--h1-size);
+    line-height: var(--_typography---h1-heading--h1-line-height);
+    font-weight: var(--_typography---h1-heading--h1-weight);
+    letter-spacing: var(--_typography---h1-heading--h1-letter-spacing);
+    text-transform: lowercase;
+  }
+  h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-family: var(--_typography---font--heading-font);
+    color: var(--_colors---text-color--text-primary);
+    font-size: var(--_typography---h2-heading--h2-size);
+    line-height: var(--_typography---h2-heading--h2-line-height);
+    font-weight: var(--_typography---h2-heading--h2-weight);
+    letter-spacing: var(--_typography---h2-heading--h2-letter-spacing);
+    text-transform: lowercase;
+  }
+  h3 {
+    margin-top: 20px;
+    margin-bottom: var(--_typography---h3-heading--h3-margin-bottom);
+    font-family: var(--_typography---font--heading-font);
+    font-size: var(--_typography---h3-heading--h3-size);
+    line-height: var(--_typography---h3-heading--h3-line-height);
+    font-weight: var(--_typography---h3-heading--h3-weight);
+    letter-spacing: var(--_typography---h3-heading--h3-letter-spacing);
+    text-transform: lowercase;
+  }
+  h4 {
+    margin-top: 10px;
+    margin-bottom: var(--_typography---h4-heading--h4-margin-bottom);
+    font-family: var(--_typography---font--heading-font);
+    font-size: var(--_typography---h4-heading--h4-size);
+    line-height: var(--_typography---h4-heading--h4-line-height);
+    font-weight: var(--_typography---h4-heading--h4-weight);
+    letter-spacing: var(--_typography---h4-heading--h4-letter-spacing);
+  }
+  h5 {
+    margin-top: 10px;
+    margin-bottom: var(--_typography---h5-heading--h5-margin-bottom);
+    font-family: var(--_typography---font--heading-font);
+    font-size: var(--_typography---h5-heading--h5-size);
+    line-height: var(--_typography---h5-heading--h5-line-height);
+    font-weight: var(--_typography---h5-heading--h5-weight);
+    letter-spacing: var(--_typography---h5-heading--h5-letter-spacing);
+  }
+  h6 {
+    margin-top: 10px;
+    margin-bottom: var(--_typography---h6-heading--h6-margin-bottom);
+    font-family: var(--_typography---font--heading-font);
+    font-size: var(--_typography---h6-heading--h6-size);
+    line-height: var(--_typography---h6-heading--h6-line-height);
+    font-weight: var(--_typography---h6-heading--h6-weight);
+    letter-spacing: var(--_typography---h6-heading--h6-letter-spacing);
+  }
+  p {
+    margin-bottom: var(--_typography---base-typography--base-margin-bottom);
+    font-family: var(--_typography---font--body-font);
+    font-size: var(--_typography---text--text-size);
+    line-height: var(--_typography---text--text-line-height);
+    letter-spacing: var(--_typography---text--text-letter-spacing);
+  }
+  a {
+    color: var(--_colors---core-accent-color--accent-primary);
+    text-decoration: none;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+  }
+  a:hover {
+    color: var(--_colors---core-accent-color--accent-primary-hover);
+  }
+  ul {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding-left: 40px;
+    font-weight: 300;
+  }
+  img {
+    display: inline-block;
+    max-width: 100%;
+  }
+  @media screen and (max-width: 991px) {
+    h1 {
+      font-size: var(--_typography---h1-heading--h1-size);
+    }
+    h2 {
+      font-size: var(--_typography---h2-heading--h2-size);
+    }
+    h3 {
+      font-size: var(--_typography---h3-heading--h3-size);
+    }
+    h4 {
+      font-size: var(--_typography---h4-heading--h4-size);
+    }
+    h5 {
+      font-size: var(--_typography---h5-heading--h5-size);
+    }
+    h6 {
+      font-size: var(--_typography---h6-heading--h6-size);
+    }
+    p {
+      font-size: var(--_typography---text--text-size);
+    }
+  }
+  @media screen and (max-width: 767px) {
+    h1 {
+      font-size: var(--_typography---h1-heading--h1-size);
+    }
+    h2 {
+      font-size: var(--_typography---h2-heading--h2-size);
+    }
+    h3 {
+      font-size: var(--_typography---h3-heading--h3-size);
+    }
+    h4 {
+      font-size: var(--_typography---h4-heading--h4-size);
+    }
+    h5 {
+      font-size: var(--_typography---h5-heading--h5-size);
+    }
+    h6 {
+      font-size: var(--_typography---h6-heading--h6-size);
+    }
+    p {
+      font-size: var(--_typography---text--text-size);
+    }
+  }
+}

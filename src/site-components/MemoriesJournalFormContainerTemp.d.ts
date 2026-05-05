@@ -1,7 +1,2 @@
 import * as React from "react";
-
-declare function MemoriesJournalFormContainerTemp(
-    props: {
-        as?: React.ElementType;
-    }
-): React.JSX.Element
+declare function MemoriesJournalFormContainerTemp(props: {}): React.JSX.Element;

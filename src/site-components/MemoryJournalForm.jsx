@@ -87,11 +87,11 @@ export function MemoryJournalForm(
     return componentVisibility ? <_Component
         className="component_section-guestbook-form on-click_form"
         tag="section"
-        id={componentId}><_Builtin.Block className="memory-journal_form-padding" tag="div"><_Builtin.Block className="memory-journal_inner-form" tag="div"><_Builtin.Block className="memory-journal_component" tag="div"><_Builtin.Block
-                        className="memory-jourrnal_form-card"
+        id={componentId}><_Builtin.Block className="memory_form-padding" tag="div"><_Builtin.Block className="memory_inner-form" tag="div"><_Builtin.Block className="memory-component" tag="div"><_Builtin.Block
+                        className="memory_form-card"
                         id="w-node-_75c85eaa-742c-11b4-baac-9d3a916f558c-916f5588"
                         tag="div"><_Builtin.FormWrapper className="form_component" {...formComponentRuntimeProps}><_Builtin.FormForm
-                                className="memory-journal_form-wrapper"
+                                className="memory_form-wrapper"
                                 name="wf-form-Contact-Form"
                                 data-name="Contact Form"
                                 method="get"

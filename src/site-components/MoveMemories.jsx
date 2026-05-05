@@ -1,25 +1,47 @@
 "use client";
 import React from "react";
-import * as _Builtin from "./_Builtin";
-import { Navigation } from "./Navigation";
-import { MemoryJournalHeading } from "./MemoryJournalHeading";
-import { MemoryForm } from "./MemoryForm";
-import { MemoryJournalSubHeading } from "./MemoryJournalSubHeading";
-import { MemoryCard } from "./MemoryCard";
-import { Footer } from "./Footer";
-import { GuestbookFilterTag } from "./GuestbookFilterTag";
+import { DEVLINK_SCOPE_CLASS } from "./devlinkScope";
+import Block from "./webflow_modules/Basic/components/Block";
+import NotSupported from "./webflow_modules/Builtin/components/NotSupported";
+import Section from "./webflow_modules/Layout/components/Section";
+import { Footer } from "./siteComponents/Footer";
+import { GuestbookFilterTag } from "./guestbook/GuestbookFilterTag";
+import { MemoryCard } from "./memoryJournal/MemoryCard";
+import { MemoryForm } from "./memoryJournal/MemoryForm";
+import { MemoryJournalHeading } from "./memoryJournal/MemoryJournalHeading";
+import { MemoryJournalSubHeading } from "./memoryJournal/MemoryJournalSubHeading";
+import { Navigation } from "./siteComponents/Navigation";
 
-export function MoveMemories(
-    {
-        as: _Component = _Builtin.Block
-    }
-) {
-    return (
-        <_Component tag="div"><Navigation /><_Builtin.Section
-                className="section-7"
-                grid={{
-                    type: "section"
-                }}
-                tag="section" /><_Builtin.Block className="div-block-70" tag="div"><MemoryJournalHeading /></_Builtin.Block><MemoryForm /><_Builtin.Block className="div-block-71" tag="div"><MemoryJournalSubHeading memoryJournalMemoryJournalSubHeadingText="share a story" /></_Builtin.Block><_Builtin.NotSupported _atom="DynamoWrapper" /><Footer /><GuestbookFilterTag /></_Component>
-    );
+export function MoveMemories({}) {
+  return (
+    <div
+      className={DEVLINK_SCOPE_CLASS}
+      style={{
+        display: "contents",
+      }}
+    >
+      <Block tag={"div"}>
+        <Navigation />
+        <Section
+          className={"section-7"}
+          grid={{
+            type: "section",
+          }}
+          tag={"section"}
+        />
+        <Block className={"div-block-70"} tag={"div"}>
+          <MemoryJournalHeading />
+        </Block>
+        <MemoryForm />
+        <Block className={"div-block-71"} tag={"div"}>
+          <MemoryJournalSubHeading
+            memoryJournalMemoryJournalSubHeadingText={"share a story"}
+          />
+        </Block>
+        <NotSupported _atom={"Collection List"} />
+        <Footer />
+        <GuestbookFilterTag />
+      </Block>
+    </div>
+  );
 }

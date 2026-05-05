@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# --- Ensure SSH agent is running and GitHub key is loaded ---
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  eval "$(ssh-agent -s)"
+fi
+
+ssh-add ~/.ssh/githubkey 2>/dev/null || true
+
+
 BRANCH="${BRANCH:-dev}"
 BASE_BRANCH="${BASE_BRANCH:-main}"
 BUILD_CMD="${BUILD_CMD:-npm run build}"
