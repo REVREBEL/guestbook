@@ -25,18 +25,12 @@ const itemId = Astro.url.searchParams.get('id');
       </div>
       
       <h1 style="font-size: 2rem; font-weight: 600; margin-bottom: 1rem; font-family: var(--heading-font); color: var(--foreground);">
-        Success!
+        Thank You
       </h1>
       
-      <p style="color: var(--muted-foreground); margin-bottom: 2rem; font-family: var(--body-font); font-size: 1.125rem;">
-        Your guestbook entry has been submitted successfully.
+      <p style="color: var(--muted-foreground); margin-bottom: 2rem; font-family: var(--body-font); font-size: 1.125rem; line-height: 1.75;">
+        A life is best measured by the hearts it touched. Thank you for being part of her story and for sharing these precious glimpses into your time together. It means the world to us to see her life celebrated by such a wonderful community.
       </p>
-      
-      {itemId && (
-        <p style="color: var(--muted-foreground); margin-bottom: 2rem; font-family: var(--body-font); font-size: 0.875rem;">
-          Entry ID: <code style="background-color: var(--muted); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">{itemId}</code>
-        </p>
-      )}
       
       <a
         href={`${baseUrl}/guestbook`}
@@ -49,3 +43,4 @@ const itemId = Astro.url.searchParams.get('id');
     </div>
   </div>
 </MainLayout>
+

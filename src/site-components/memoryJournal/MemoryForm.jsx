@@ -94,7 +94,7 @@ export function MemoryForm({
   tagsGroupFormInputLabel = "Optional HasHtag",
   tagsGroupFormSectionRuntimeProps = {},
   tagsGroupFormSectionSlot = "",
-  tagsGroupTagsGroupVisibility = true,
+  tagsGroupTagsGroupVisibility = false,
   testFieldTestVariable = "TEST_ID",
   videoUploadFieldIconVisibility = true,
   videoUploadFieldVideoUploadRuntimeProps = {},
@@ -116,7 +116,7 @@ export function MemoryForm({
           tag={"section"}
         >
           <HtmlEmbed content={""} />
-          <Block className={"memory_form-padding"} tag={"div"}>
+          <Block className={"memory_form-padding margin-top_small"} tag={"div"}>
             <Block className={"memory_inner-form"} tag={"div"}>
               <Block className={"memory-component"} tag={"div"}>
                 <Block
@@ -141,9 +141,14 @@ export function MemoryForm({
                       name={"wf-form-Share-Your-Memory"}
                     >
                       <Block className={"memory_column-group"} tag={"div"}>
-                        <Block className={"memory-form-columns"} tag={"div"}>
+                        <Block
+                          className={"memory-form-columns is-maxwidth_500"}
+                          tag={"div"}
+                        >
                           <Block
-                            className={"form_field-wrapper is-content-block"}
+                            className={
+                              "form_field-wrapper is-content-block is-flex-align-top-left_mobile"
+                            }
                             tag={"div"}
                           >
                             <Heading
@@ -223,7 +228,9 @@ export function MemoryForm({
                               </Block>
                             </Block>
                             <Block
-                              className={"memory-form_field-group"}
+                              className={
+                                "memory-form_field-group is-location-alt-layout"
+                              }
                               tag={"div"}
                             >
                               {memoryLocationFieldFormInputVisibility ? (
@@ -322,17 +329,120 @@ export function MemoryForm({
                           </Block>
                         </Block>
                         <Block
-                          className={"memory-form-columns"}
+                          className={
+                            "memory-form-columns s-align-bottom flex-strecch is-max-width_600"
+                          }
                           id={
                             "w-node-_8370e215-8f01-80b6-7142-22700c60bf7d-0c60bf5e"
                           }
                           tag={"div"}
                         >
+                          <Block className={"div-block-85"} tag={"div"} />
+                          <Block
+                            className={
+                              "memory-form_field-group is-tag-alt-layout"
+                            }
+                            id={
+                              "w-node-_8370e215-8f01-80b6-7142-22700c60bf94-0c60bf5e"
+                            }
+                            tag={"div"}
+                            {...tagsGroupFormSectionRuntimeProps}
+                          >
+                            {tagsGroupFormSectionSlot ?? (
+                              <>
+                                <Block
+                                  className={
+                                    "form_field-wrapper is-tag-alt-layout"
+                                  }
+                                  tag={"div"}
+                                >
+                                  <FormBlockLabel
+                                    className={"input_label"}
+                                    htmlFor={"Phone"}
+                                  >
+                                    {tagsGroupFormInputLabel}
+                                  </FormBlockLabel>
+                                  <Block
+                                    className={"form-field_icon-component"}
+                                    tag={"div"}
+                                  >
+                                    <FormTextInput
+                                      autoFocus={false}
+                                      className={"input_field is-icon"}
+                                      data-name={"memory_tag_1"}
+                                      disabled={false}
+                                      id={tag1FieldFormInputId}
+                                      maxLength={256}
+                                      name={"memory_tag_1"}
+                                      placeholder={
+                                        'Use a Hashtag Like "Summertime"'
+                                      }
+                                      required={false}
+                                      type={"text"}
+                                      {...tag1FieldFormInputRuntimeProps}
+                                    />
+                                    {tag1FieldIconVisibility ? (
+                                      <HtmlEmbed
+                                        className={"form-field_icon"}
+                                        content={""}
+                                        value={
+                                          "%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22currentColor%22%3E%3Cpath%20d%3D%22M10%203L6%2021%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M20.5%2016H2.5%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M22%207H4%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M18%203L14%2021%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
+                                        }
+                                      />
+                                    ) : null}
+                                  </Block>
+                                </Block>
+                                <Block
+                                  className={
+                                    "form_field-wrapper is-tag-alt-layout"
+                                  }
+                                  id={"Form-Input"}
+                                  tag={"div"}
+                                >
+                                  <FormBlockLabel
+                                    className={"input_label is-transparent"}
+                                    htmlFor={"Phone"}
+                                  >
+                                    {tagsGroupFormInputLabel}
+                                  </FormBlockLabel>
+                                  <Block
+                                    className={"form-field_icon-component"}
+                                    tag={"div"}
+                                  >
+                                    {tag2FieldIconVisibility ? (
+                                      <HtmlEmbed
+                                        className={"form-field_icon"}
+                                        content={""}
+                                        value={
+                                          "%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22currentColor%22%3E%3Cpath%20d%3D%22M10%203L6%2021%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M20.5%2016H2.5%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M22%207H4%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M18%203L14%2021%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
+                                        }
+                                      />
+                                    ) : null}
+                                    <FormTextInput
+                                      autoFocus={false}
+                                      className={"input_field is-icon"}
+                                      data-name={"memory_tag_2"}
+                                      disabled={false}
+                                      id={tag2FieldFormInputId}
+                                      maxLength={256}
+                                      name={"memory_tag_2"}
+                                      placeholder={
+                                        'Use a Hashtag Like "GoodAdvice"'
+                                      }
+                                      required={false}
+                                      type={"text"}
+                                      {...tag2FieldFormInputRuntimeProps}
+                                    />
+                                  </Block>
+                                </Block>
+                              </>
+                            )}
+                          </Block>
                           {tagsGroupTagsGroupVisibility ? (
                             <Block
                               className={"memory-form_field-group"}
                               id={
-                                "w-node-_8370e215-8f01-80b6-7142-22700c60bf94-0c60bf5e"
+                                "w-node-d48436c1-c718-c352-cb48-c4a5e37d126d-0c60bf5e"
                               }
                               tag={"div"}
                               {...tagsGroupFormSectionRuntimeProps}
@@ -457,17 +567,37 @@ export function MemoryForm({
                             tag={"div"}
                           >
                             <Block
-                              className={"form_field-wrapper is-content-block"}
+                              className={"contributor-headlne"}
                               tag={"div"}
                             >
-                              <Heading
-                                className={"timeline-form_content-heading-copy"}
-                                tag={"h1"}
+                              <Block
+                                className={
+                                  "form_field-wrapper is-content-block is-flex-align-left"
+                                }
+                                id={
+                                  "w-node-_751f7627-8c05-8deb-b1cd-00781a4f5ee7-0c60bf5e"
+                                }
+                                tag={"div"}
                               >
-                                {"the contributor"}
-                              </Heading>
+                                <Block
+                                  className={"div-block-84"}
+                                  id={
+                                    "w-node-_6380bd7a-d957-0a66-bbf2-022c5261ae87-0c60bf5e"
+                                  }
+                                  tag={"div"}
+                                >
+                                  <Heading
+                                    className={
+                                      "timeline-form_content-heading-copy is-align-top-right_mobile"
+                                    }
+                                    tag={"h1"}
+                                  >
+                                    {"the contributor"}
+                                  </Heading>
+                                </Block>
+                              </Block>
                             </Block>
-                            {firstNameFieldFormInputVisibility ? (
+                            <Block className={"is-name-alt-layout"} tag={"div"}>
                               <Block
                                 className={"form_field-wrapper"}
                                 tag={"div"}
@@ -514,52 +644,52 @@ export function MemoryForm({
                                   </>
                                 )}
                               </Block>
-                            ) : null}
-                            {lastNameFieldFormInputVisibility ? (
-                              <Block
-                                className={"form_field-wrapper"}
-                                tag={"div"}
-                                {...lastNameFieldFormSectionRuntimeProps}
-                              >
-                                {lastNameFieldFormSectionSlot ?? (
-                                  <>
-                                    <FormBlockLabel
-                                      className={"input_label"}
-                                      htmlFor={"Phone"}
-                                    >
-                                      {lastNameFieldFormInputLabel}
-                                    </FormBlockLabel>
-                                    <Block
-                                      className={"form-field_icon-component"}
-                                      tag={"div"}
-                                    >
-                                      <FormTextInput
-                                        autoFocus={false}
-                                        className={"input_field is-icon"}
-                                        data-name={"last_name"}
-                                        disabled={false}
-                                        id={lastNameFieldFormInputId}
-                                        maxLength={256}
-                                        name={"last_name"}
-                                        placeholder={"Enter your last name"}
-                                        required={true}
-                                        type={"text"}
-                                        {...lastNameFieldFormInputRuntimeProps}
-                                      />
-                                      <HtmlEmbed
-                                        className={
-                                          "form-field_icon icon-person"
-                                        }
-                                        content={""}
-                                        value={
-                                          "%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2225px%22%20height%3D%2225px%22%20stroke-width%3D%221.5%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22%20currentColor%22%3E%3Cpath%20d%3D%22M7%2018V17C7%2014.2386%209.23858%2012%2012%2012V12C14.7614%2012%2017%2014.2386%2017%2017V18%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M12%2012C13.6569%2012%2015%2010.6569%2015%209C15%207.34315%2013.6569%206%2012%206C10.3431%206%209%207.34315%209%209C9%2010.6569%2010.3431%2012%2012%2012Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203.6V20.4C21%2020.7314%2020.7314%2021%2020.4%2021H3.6C3.26863%2021%203%2020.7314%203%2020.4V3.6C3%203.26863%203.26863%203%203.6%203H20.4C20.7314%203%2021%203.26863%2021%203.6Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
-                                        }
-                                      />
-                                    </Block>
-                                  </>
-                                )}
-                              </Block>
-                            ) : null}
+                              {lastNameFieldFormInputVisibility ? (
+                                <Block
+                                  className={"form_field-wrapper"}
+                                  tag={"div"}
+                                  {...lastNameFieldFormSectionRuntimeProps}
+                                >
+                                  {lastNameFieldFormSectionSlot ?? (
+                                    <>
+                                      <FormBlockLabel
+                                        className={"input_label"}
+                                        htmlFor={"Phone"}
+                                      >
+                                        {lastNameFieldFormInputLabel}
+                                      </FormBlockLabel>
+                                      <Block
+                                        className={"form-field_icon-component"}
+                                        tag={"div"}
+                                      >
+                                        <FormTextInput
+                                          autoFocus={false}
+                                          className={"input_field is-icon"}
+                                          data-name={"last_name"}
+                                          disabled={false}
+                                          id={lastNameFieldFormInputId}
+                                          maxLength={256}
+                                          name={"last_name"}
+                                          placeholder={"Enter your last name"}
+                                          required={true}
+                                          type={"text"}
+                                          {...lastNameFieldFormInputRuntimeProps}
+                                        />
+                                        <HtmlEmbed
+                                          className={
+                                            "form-field_icon icon-person"
+                                          }
+                                          content={""}
+                                          value={
+                                            "%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%3Csvg%20width%3D%2225px%22%20height%3D%2225px%22%20stroke-width%3D%221.5%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20color%3D%22%20currentColor%22%3E%3Cpath%20d%3D%22M7%2018V17C7%2014.2386%209.23858%2012%2012%2012V12C14.7614%2012%2017%2014.2386%2017%2017V18%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M12%2012C13.6569%2012%2015%2010.6569%2015%209C15%207.34315%2013.6569%206%2012%206C10.3431%206%209%207.34315%209%209C9%2010.6569%2010.3431%2012%2012%2012Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M21%203.6V20.4C21%2020.7314%2020.7314%2021%2020.4%2021H3.6C3.26863%2021%203%2020.7314%203%2020.4V3.6C3%203.26863%203.26863%203%203.6%203H20.4C20.7314%203%2021%203.26863%2021%203.6Z%22%20stroke%3D%22%20currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"
+                                          }
+                                        />
+                                      </Block>
+                                    </>
+                                  )}
+                                </Block>
+                              ) : null}
+                            </Block>
                             {emailFormFieldFormInputVisibility ? (
                               <Block
                                 className={"form_field-wrapper"}
@@ -620,10 +750,24 @@ export function MemoryForm({
                           </Block>
                         </Block>
                       </Block>
-                      <Block className={"space_25px"} tag={"div"} />
-                      <Block className={"memory_column-group"} tag={"div"}>
+                      <Block
+                        className={"is-max-size"}
+                        id={
+                          "w-node-_6bb23685-0217-6a4a-29fb-8421116c3fb2-0c60bf5e"
+                        }
+                        tag={"div"}
+                      />
+                      <Block
+                        className={"memory_column-group is-grid_2-2 is-2-1"}
+                        tag={"div"}
+                      >
                         <Block
-                          className={"memory-form-columns is-30pct"}
+                          className={
+                            "memory-form-columns is-30pct is-align-top"
+                          }
+                          id={
+                            "w-node-_913f2cfc-6ec7-4904-71e8-b45ebcf36a8c-0c60bf5e"
+                          }
                           tag={"div"}
                         >
                           <Block
@@ -631,7 +775,9 @@ export function MemoryForm({
                             tag={"div"}
                           >
                             <Block
-                              className={"form_field-wrapper is-content-block"}
+                              className={
+                                "form_field-wrapper is-content-block is-grid-2-col is-max-width_300"
+                              }
                               tag={"div"}
                             >
                               <Heading
@@ -641,7 +787,9 @@ export function MemoryForm({
                                 {addContentHeadlineText}
                               </Heading>
                               <Paragraph
-                                className={"memory-form_content-paragraph"}
+                                className={
+                                  "memory-form_content-paragraph is-text-wrap-balance"
+                                }
                               >
                                 {addContentParagraphText}
                               </Paragraph>
@@ -649,11 +797,18 @@ export function MemoryForm({
                           </Block>
                         </Block>
                         <Block
-                          className={"memory-form-columns is-70pct"}
+                          className={
+                            "memory-form-columns is-70pct is-full-width"
+                          }
+                          id={
+                            "w-node-a56e31f7-ba5d-e7b6-3363-ad44a10578f0-0c60bf5e"
+                          }
                           tag={"div"}
                         >
                           <Block
-                            className={"form_field-wrapper is-file-upload"}
+                            className={
+                              "form_field-wrapper is-file-upload is-ful-width"
+                            }
                             tag={"div"}
                           >
                             <Block
@@ -739,106 +894,119 @@ export function MemoryForm({
                               </Block>
                             </Block>
                           </Block>
+                        </Block>
+                      </Block>
+                      <Block
+                        className={
+                          "memory_column-group is-memory-form is-bottom-block is-full-wdth"
+                        }
+                        tag={"div"}
+                      >
+                        <Block
+                          className={
+                            "form_field-wrapper flex_horizontal flex-align-left is-grid-2-1"
+                          }
+                          id={
+                            "w-node-c7350eb6-b91c-92b1-c82d-79643d087411-0c60bf5e"
+                          }
+                          tag={"div"}
+                        >
+                          <Block
+                            className={"space_25px"}
+                            id={
+                              "w-node-_654a10dd-e515-7dd7-7517-c004c1a47101-0c60bf5e"
+                            }
+                            tag={"div"}
+                          >
+                            {submitButtonSubmitButtonVisibility ? (
+                              <Block
+                                className={
+                                  "button is-accent-tertiary hero_button"
+                                }
+                                id={
+                                  "w-node-c7350eb6-b91c-92b1-c82d-79643d087417-0c60bf5e"
+                                }
+                                tag={"div"}
+                                {...submitButtonSubmitButtonOuterRuntimeProps}
+                              >
+                                {submitButtonSubmitButtonSlot ?? (
+                                  <FormButton
+                                    className={"button_label"}
+                                    collectionId={""}
+                                    data-wait={submitButtonUserLoadingText}
+                                    type={"submit"}
+                                    value={submitButtonSubmitButtonText}
+                                    {...submitButtonSubmitButtonInnerRuntimeProps}
+                                  />
+                                )}
+                              </Block>
+                            ) : null}
+                          </Block>
+                          <Block
+                            className={
+                              "form-field_icon-component is-image-upload-wrapper is-uploud-form_art-alayout is-full-width"
+                            }
+                            id={
+                              "w-node-_8370e215-8f01-80b6-7142-22700c60bfaa-0c60bf5e"
+                            }
+                            tag={"div"}
+                          >
+                            <FormBlockLabel
+                              className={"input_label"}
+                              htmlFor={"Phone"}
+                            >
+                              {"Content LinkS (Videos | Photos)"}
+                            </FormBlockLabel>
+                            <FormTextInput
+                              autoFocus={false}
+                              className={"input_field is-content-link"}
+                              data-name={"content_link"}
+                              disabled={false}
+                              id={contentLinkFieldFormInputId}
+                              maxLength={256}
+                              name={"content_link"}
+                              placeholder={"https://image|video.link"}
+                              required={false}
+                              type={"url"}
+                              {...contentLinkFieldFormInputRuntimeProps}
+                            />
+                          </Block>
                           {contentLinkFieldFormSectionVisibility ? (
                             <Block
-                              className={"form_field-wrapper padding-top_10px"}
+                              className={
+                                "form_field-wrapper padding-top_10px is-hidden w-node-_8370e215-8f01-80b6-7142-22700c60bfa9-0c60bf5e"
+                              }
                               id={"Content-Link-ID"}
                               tag={"div"}
                               {...contentLinkFieldFormSectionProps}
                             >
                               {contentLinkFieldFormSectionSlot ?? (
-                                <>
-                                  <Block
-                                    className={"form-field_icon-component"}
-                                    tag={"div"}
-                                  >
-                                    <FormTextInput
-                                      autoFocus={false}
-                                      className={"input_field is-content-link"}
-                                      data-name={"content_link"}
-                                      disabled={false}
-                                      id={contentLinkFieldFormInputId}
-                                      maxLength={256}
-                                      name={"content_link"}
-                                      placeholder={"https://image|video.link"}
-                                      required={false}
-                                      type={"url"}
-                                      {...contentLinkFieldFormInputRuntimeProps}
-                                    />
-                                  </Block>
-                                  <FormBlockLabel
-                                    className={"input_label"}
-                                    htmlFor={"Phone"}
-                                  >
-                                    {"Content LinkS (Videos | Photos)"}
-                                  </FormBlockLabel>
-                                </>
+                                <Block className={"button-wrapper"} tag={"div"}>
+                                  {submitButtonSubmitButtonVisibility ? (
+                                    <Block
+                                      className={
+                                        "button is-accent-tertiary hero_button"
+                                      }
+                                      id={submitButtonSubmitButtonId}
+                                      tag={"div"}
+                                      {...submitButtonSubmitButtonOuterRuntimeProps}
+                                    >
+                                      <FormButton
+                                        className={"button_label"}
+                                        data-file-upload-action={
+                                          "/guestbook-form/api/memory/submit"
+                                        }
+                                        data-wait={submitButtonUserLoadingText}
+                                        type={"submit"}
+                                        value={submitButtonSubmitButtonText}
+                                        {...submitButtonSubmitButtonInnerRuntimeProps}
+                                      />
+                                    </Block>
+                                  ) : null}
+                                </Block>
                               )}
                             </Block>
                           ) : null}
-                        </Block>
-                      </Block>
-                      <Block className={"space_25px"} tag={"div"} />
-                      <Block className={"memory_column-group"} tag={"div"}>
-                        <Block
-                          className={
-                            "form_field-wrapper flex_horizontal flex-align_center"
-                          }
-                          tag={"div"}
-                        >
-                          <Block className={"button-group_wrapper"} tag={"div"}>
-                            <Block className={"button-wrapper"} tag={"div"}>
-                              {submitButtonSubmitButtonVisibility ? (
-                                <Block
-                                  className={
-                                    "button is-accent-tertiary hero_button"
-                                  }
-                                  id={submitButtonSubmitButtonId}
-                                  tag={"div"}
-                                  {...submitButtonSubmitButtonOuterRuntimeProps}
-                                >
-                                  {submitButtonSubmitButtonSlot ?? (
-                                    <FormButton
-                                      className={"button_label"}
-                                      data-file-upload-action={
-                                        "/guestbook-form/api/memory/submit"
-                                      }
-                                      data-wait={submitButtonUserLoadingText}
-                                      type={"submit"}
-                                      value={submitButtonSubmitButtonText}
-                                      {...submitButtonSubmitButtonInnerRuntimeProps}
-                                    />
-                                  )}
-                                </Block>
-                              ) : null}
-                            </Block>
-                            <Block
-                              className={"button-wrapper is-hidden"}
-                              tag={"div"}
-                            >
-                              {submitButtonSubmitButtonVisibility ? (
-                                <Block
-                                  className={
-                                    "button is-accent-tertiary hero_button"
-                                  }
-                                  id={submitButtonSubmitButtonId}
-                                  tag={"div"}
-                                  {...submitButtonSubmitButtonOuterRuntimeProps}
-                                >
-                                  {submitButtonSubmitButtonSlot ?? (
-                                    <FormButton
-                                      className={"button_label"}
-                                      collectionId={""}
-                                      data-wait={submitButtonUserLoadingText}
-                                      type={"submit"}
-                                      value={submitButtonSubmitButtonText}
-                                      {...submitButtonSubmitButtonInnerRuntimeProps}
-                                    />
-                                  )}
-                                </Block>
-                              ) : null}
-                            </Block>
-                          </Block>
                         </Block>
                       </Block>
                     </FormForm>
@@ -856,6 +1024,7 @@ export function MemoryForm({
                           "Oops! Something went wrong. Please try again or check your details and submit again."
                         }
                       </Block>
+                      <Block className={"button-group_wrapper"} tag={"div"} />
                     </FormErrorMessage>
                   </FormWrapper>
                 </Block>

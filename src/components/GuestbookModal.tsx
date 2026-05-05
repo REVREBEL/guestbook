@@ -179,11 +179,11 @@ export function GuestbookModal({
         {/* Form container */}
         <div style={{ padding: '24px' }}>
           <GuestbookForm
-            formAction={apiEndpoint}
-            formMethod="POST"
-            collectionIdField={collectionId}
-            itemIdField={itemId}
-            editCodeField={editCode}
+            formComponentRuntimeProps={{
+              action: apiEndpoint,
+              method: 'POST'
+            }}
+            guestbookCollectionIdCollectionIdVariable={collectionId}
             fullNameFieldVisibility={true}
             emailFieldVisibility={true}
             locationFieldVisibility={true}
@@ -197,3 +197,4 @@ export function GuestbookModal({
     </>
   );
 }
+

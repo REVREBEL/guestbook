@@ -580,7 +580,9 @@ export function GuestbookForm({
                               tag={"div"}
                             >
                               <Block
-                                className={"button-wrapper max-width_800px"}
+                                className={
+                                  "button-wrapper max-width_800px is-gustbook-submit"
+                                }
                                 tag={"div"}
                               >
                                 {buttonSubmitButtonVisibility ? (
