@@ -18,8 +18,8 @@
   "dependencies": {
     "@astrojs/cloudflare": "12.6.13",
     "@astrojs/react": "4.4.2",
-    "@aws-sdk/client-s3": "3.948.0",
-    "@aws-sdk/s3-request-presigner": "3.948.0",
+    "@aws-sdk/client-s3": "3.1045.0",
+    "@aws-sdk/s3-request-presigner": "3.1045.0",
     "@hookform/resolvers": "5.2.2",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-alert-dialog": "1.1.15",
